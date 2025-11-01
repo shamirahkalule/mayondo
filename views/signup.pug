@@ -1,0 +1,26 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title MAYONDO WOOD &amp; FURNITURE
+.form
+  form(action='/signup' method='POST')
+    h3 Create account
+    label(for='fname') First name
+    input#fname(type='text' name='fname' placeholder='Enter first name' required='')
+    label(for='lname') Last name
+    input#lname(type='text' name='lname' placeholder='Enter last name' required='')
+    label(for='contact') Contact
+    input#contact(type='number' name='contact' placeholder='0777777777' required='')
+    label(for='location') Location
+    input#location(type='text' name='location' placeholder='Enter your location' required='')
+    label(for='email') Email
+    input#email(type='email' name='email' placeholder='example@gmail.com' required='')
+    label(for='password') Password
+    input#password(type='password' name='password' placeholder='Enter password' required='')
+    label(for='confirmpassword') Confirm password
+    input#confirmpassword(type='password' name='confirmpassword' placeholder='Confirm password' required='')
+    button Submit
+  p
+    | Have an account? 
+    a(href='signin.html') Sign in
