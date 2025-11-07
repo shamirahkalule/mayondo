@@ -1,0 +1,47 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title MAYONDO WOOD &amp; FURNITURE
+
+body
+include ../components/nav
+
+.form
+  form(action='/regwood' method='POST' enctype='multipart/form-data')
+    h3 Register Wood Stock
+    label(for='woodType') Wood Type
+    input#woodType(type='text' name='woodType' placeholder='Enter wood type' required='')
+
+    label(for='woodName') Wood Name
+    input#woodName(type='text' name='woodName' placeholder='Enter wood name' required='')
+
+    label(for='quantity') Quantity
+    input#quantity(type='number' name='quantity' placeholder='Enter quantity' required='')
+
+    label(for='costPrice') Cost Price
+    input#costPrice(type='number' step='1' name='costPrice' required)
+
+    label(for='productPrice') Product Price
+    input#productPrice(type='number' name='productPrice' placeholder='Enter product price' required='')
+
+    label(for='supplierName') Supplier Name
+    input#supplierName(type='text' name='supplierName' placeholder='Enter supplier name' required='')
+
+    label(for='date') Date
+    input#date(type='date' name='date' placeholder='Enter date' required='')
+
+    label(for='productQuality') Product Quality
+    input#productQuality(type='text' name='productQuality' placeholder='Enter product Quality' required='')
+
+    label(for='color') Color
+    input#color(type='text' name='color' placeholder='Enter product color')
+
+    label(for='measurement') Measurements
+    input#measurement(type='number' name='measurement' placeholder='Enter product measurement')
+
+    label(for='image') Upload Image
+    input#image(type='file' name='image' placeholder='Upload an image')
+
+    button Submit
+include ../components/footer

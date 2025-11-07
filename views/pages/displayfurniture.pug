@@ -1,0 +1,43 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title MAYONDO WOOD &amp; FURNITURE
+
+body 
+include ../components/nav
+
+h1 Available Furniture
+ 
+if furnitureList && furnitureList.length
+  each item in furnitureList
+    .card.mb-3(style='max-width: 640px;')
+      .row.g-0
+        .col-md-4
+            img.img-fluid.rounded-start(src=item.image alt=item.name)
+        .col-md-8
+          .card-body
+            h3.card-title= item.name
+            p.card-text
+              | Type: #{item.productType}
+            p.card-text
+              | Quantity: #{item.quantity}
+            p.card-text
+              | Cost Price: UGX #{item.costPrice}
+            p.card-text
+              | Product Price: UGX #{item.productPrice}
+            p.card-text
+              | Supplier: #{item.supplierName}
+            p.card-text
+              | Quality: #{item.productQuality}
+            if item.color
+              p.card-text Color: #{item.color}
+            if item.measurement
+              p.card-text Measurement: #{item.measurement}
+            p.card-text
+              small.text-body-secondary Added on #{item.date}
+else
+  p Loading ...
+
+
+include ../components/footer

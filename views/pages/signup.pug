@@ -14,6 +14,11 @@ head
     input#contact(type='number' name='contact' placeholder='0777777777' required='')
     label(for='location') Location
     input#location(type='text' name='location' placeholder='Enter your location' required='')
+    label(for='role') Role
+          select#role(name="role") 
+          option(value="") Select role
+          option(value="Manager") Manager
+          option(value="Sales_agent") Sales agent
     label(for='email') Email
     input#email(type='email' name='email' placeholder='example@gmail.com' required='')
     label(for='password') Password

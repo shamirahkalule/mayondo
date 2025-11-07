@@ -10,13 +10,14 @@ resave:false,
 saveUninitialized:false
 });
 require("dotenv").config();
-
+  
 //importing user model for passport configuration
 const User = require("./models/User");
 
 //import routes
 const homeRoutes = require("./routes/homeRoutes");
 const authRoutes = require("./routes/authRoutes");
+const stockRoutes = require("./routes/stockRoutes");
 const { error } = require("console");
 
 //2. instantiation
@@ -36,13 +37,13 @@ mongoose.connection
  
 //view engine setup
 app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "views"));//specifying the views directory
+app.set("views", path.join(__dirname, "views/pages"));//specifying the views directory
 //4.middleware
 
 app.use(expressSession);//using express session middleware
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, "public"))); //serving static files from the public directory
-app.use("public/images/uploads", express.static(__dirname + "/public/images/uploads")); //serving static files from uploads directory
 
 //epress session configs
 app.use(passport.initialize());
@@ -56,6 +57,7 @@ passport.deserializeUser(User.deserializeUser());
 //5.Routes. u should use the imported routes
 app.use("/", homeRoutes);
 app.use("/", authRoutes);
+app.use("/", stockRoutes);
 
 // Handling non-existing routes (404) - should come after all routes
 app.use((req, res) => {

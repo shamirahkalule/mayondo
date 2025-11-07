@@ -11,10 +11,6 @@ router.post("/signup", async(req, res) =>{
     try {
         const newUser = new User(req.body);
 
-        if(newUser.password !== newUser.confirmpassword){
-            return res.status(400).send("passwords dont match");
-        }
-        
         let user = await User.findOne({
             email: req.body.email
         });
@@ -40,6 +36,6 @@ router.get("/signin", (req, res) => {
 
 });
 
-router.post("/signin", passport.authenticate("local", {successRedirect: "/", failureRedirect: "/signin"}), (req, res));
+router.post("/signin", passport.authenticate("local", {successRedirect: "/", failureRedirect: "/signin"}));
 
 module.exports = router;
