@@ -36,6 +36,7 @@ if furnitureList && furnitureList.length
               p.card-text Measurement: #{item.measurement}
             p.card-text
               small.text-body-secondary Added on #{item.date}
+      a.btn.btn-primary(href=`/editfurniture/${item._id}`) Edit       
 else
   p Loading ...
 

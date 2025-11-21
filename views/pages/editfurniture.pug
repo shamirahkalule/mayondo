@@ -1,0 +1,61 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title MAYONDO WOOD &amp; FURNITURE
+body 
+include ../components/nav
+    h1 Edit Furniture  
+    if furniture.image
+        img.img-fluid(src=furniture.image alt=furniture.name style='max-width: 300px;')
+    form#editForm(action="editfurniture" method="PUT")
+        label(for='name') Name
+        input#name(type='text' name='name' value=furniture.name required)
+        label(for='productType') Product Type
+        input#productType(type='text' name='productType' value=furniture.productType required)
+        label(for='quantity') Quantity
+        input#quantity(type='number' name='quantity' value=furniture.quantity required)
+        label(for='costPrice') Cost Price (UGX)
+        input#costPrice(type='number' name='costPrice' value=furniture.costPrice required)
+        label(for='productPrice') Product Price (UGX)
+        input#productPrice(type='number' name='productPrice' value=furniture.productPrice required)
+        label(for='supplierName') Supplier Name
+        input#supplierName(type='text' name='supplierName' value=furniture.supplierName required)
+        label(for='productQuality') Product Quality
+        input#productQuality(type='text' name='productQuality' value=furniture.productQuality required)
+        label.form-label(for='color') Color (Optional)
+        input#color.form-control(type='text' name='color' value=furniture.color)
+        label(for='measurement') Measurement (Optional)
+        input#measurement(type='text' name='measurement' value=furniture.measurement)
+        button.btn.btn-primary(type='submit') Update Furniture
+        a.btn.btn-secondary(href='/displayfurniture') Cancel
+
+    script.
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        try {
+            const response = await fetch(`/editfurniture/#{furniture._id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+            alert('Furniture updated successfully!');
+            window.location.href = '/displayfurniture';
+            } else {
+            alert(result.message || 'Error updating furniture');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error updating furniture');
+        }
+        });

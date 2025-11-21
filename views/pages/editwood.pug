@@ -1,0 +1,61 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title MAYONDO WOOD &amp; FURNITURE
+body 
+include ../components/nav
+    h1 Edit Wood 
+    if wood.image
+        img.img-fluid(src=wood.image alt=wood.name style='max-width: 300px;')
+    form#editForm(action="editwood" method="PUT")
+        label(for='woodType') Wood type 
+        input#woodType(type='text' name='woodType' value=wood.woodType required)
+        label(for='woodName') Wood name
+        input#woodName(type='text' name='woodName' value=wood.woodName required)
+        label(for='quantity') Quantity
+        input#quantity(type='number' name='quantity' value=wood.quantity required)
+        label(for='costPrice') Cost Price (UGX)
+        input#costPrice(type='number' name='costPrice' value=wood.costPrice required)
+        label(for='productPrice') Product Price (UGX)
+        input#productPrice(type='number' name='productPrice' value=wood.productPrice required)
+        label(for='supplierName') Supplier Name
+        input#supplierName(type='text' name='supplierName' value=wood.supplierName required)
+        label(for='productQuality') Product Quality
+        input#productQuality(type='text' name='productQuality' value=wood.productQuality required)
+        label.form-label(for='color') Color (Optional)
+        input#color.form-control(type='text' name='color' value=wood.color)
+        label(for='measurement') Measurement (Optional)
+        input#measurement(type='text' name='measurement' value=wood.measurement)
+        button.btn.btn-primary(type='submit') Update Wood
+        a.btn.btn-secondary(href='/displaywood') Cancel
+
+    script.
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        try {
+            const response = await fetch(`/editwood/#{wood._id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+            alert('wood updated successfully!');
+            window.location.href = '/displaywood';
+            } else {
+            alert(result.message || 'Error updating wood');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error updating wood');
+        }
+        });

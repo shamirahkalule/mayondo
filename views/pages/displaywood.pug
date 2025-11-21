@@ -36,7 +36,7 @@ if woodList && woodList.length
               p.card-text Measurement: #{item.measurement}
             p.card-text
               small.text-body-secondary Added on #{item.date}
-      a.btn.btn-primary(href=`/furniture/${item._id}`)
+      a.btn.btn-primary(href=`/editwood/${item._id}`) Edit
 
 else
   p Loading ...

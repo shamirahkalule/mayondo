@@ -21,6 +21,7 @@ router.get("/regwood", (req, res) =>{
     res.render("regwood")
 });
 
+//adding wood to the database 
 router.post("/regwood", upload.single("image"), async(req, res) =>{
     try {
         if (!req.body || Object.keys(req.body).length === 0) {
@@ -48,6 +49,7 @@ router.get("/regfurniture", (req, res) => {
     res.render("regfurniture")
 });
 
+//adding furniture to the database
 router.post("/regfurniture", upload.single("image"), async(req, res) => {
     try{
         if (!req.body || Object.keys(req.body).length === 0) {
@@ -91,6 +93,76 @@ router.get("/displayfurniture", async (req, res) => {
         res.status(500).send("Error fetching wood data");
     }   
 });
+
+//editing furniture
+router.get("/editfurniture/:id", async(req, res) => {
+    try{
+        const furnitureId = req.params.id;
+        const furniture = await Furniturestock.findById(furnitureId);
+        res.render("editfurniture", {furniture});
+    }catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching furniture data");
+    }
+})
+
+router.put("/editfurniture/:id", async(req, res) => {
+    try {
+        const furnitureId = req.params.id;
+        const updatedata = req.body;
+        const updatedFurniture = await Furniturestock.findByIdAndUpdate(
+            furnitureId,
+            updatedata,
+            {new: true, runValidators: true}
+        );
+
+        if (!updatedFurniture) {
+            return res.status(404).json({ message: 'Furniture not found' });
+        }
+    
+        res.json({ message: 'Updated successfully', furniture: updatedFurniture });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error updating furniture data");
+    }
+})
+
+
+//editing wood
+router.get("/editwood/:id", async(req, res) => {
+    try {
+        const woodId = req.params.id;
+        const wood = await Woodstock.findById(woodId);
+
+        res.render("editwood", {wood});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching wood data");
+    }
+})
+
+router.put("/editwood/:id", async(req, res) => {
+    try {
+        const woodId = req.params.id;
+        const updatedata = req.body;
+        const updatedWood = await Woodstock.findByIdAndUpdate(
+            woodId,
+            updatedata,
+            {new: true, runValidators: true}
+        );
+
+        if (!updatedWood) {
+            return res.status(404).json({ message: 'Wood not found' });
+        }
+    
+        res.json({ message: 'Updated successfully', wood: updatedWood });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error updating wood data");
+    }
+})
 
 
 module.exports = router;
