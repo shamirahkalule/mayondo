@@ -1,0 +1,506 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Sales Dashboard - Mayondo
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js')
+  style.
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
+    body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 10px;
+    }
+    .container {
+    max-width: 1200px;
+    margin: 0 100px;
+    padding: 10px;
+    }
+    /* Header */
+    .dashboard-header {
+    margin-bottom: 30px;
+    }
+    .dashboard-header h1 {
+    font-size: 1.5rem;
+    color: #1a1a1a;
+    font-weight: 600;
+    }
+    .header-subtitle {
+    color: #666666;
+    font-size: 0.85rem;
+    }
+    /* Stats Grid */
+    .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+    }
+    .stat-card {
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 18px;
+    transition: transform 0.3s ease;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    }
+    .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .stat-card h3 {
+    color: #666666;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    }
+    .stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+    }
+    .stat-change {
+    font-size: 0.75rem;
+    color: #666666;
+    display: block;
+    margin-top: 4px;
+    }
+    .stat-change.positive {
+    color: #22c55e;
+    }
+    .stat-change.negative {
+    color: #ef4444;
+    }
+    .chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    }
+    .chart-wrapper-large {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    margin-top: 15px;
+    }
+    .mini-chart {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    }
+    /* Table Section */
+    .table-section {
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 30px;
+    border: 1px solid #e0e0e0;
+    overflow-x: auto;
+    }
+    .table-section h2 {
+    color: #1a1a1a;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    }
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background: #ffffff;
+    }
+    thead {
+    background: #f0f0f0;
+    }
+    th {
+    padding: 12px;
+    text-align: left;
+    color: #666666;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    }
+    td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #1a1a1a;
+    }
+    tbody tr:hover {
+    background: #f8f8f8;
+    }
+    .out-of-stock {
+    color: #ef4444;
+    font-weight: 600;
+    }
+    .quick-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    }
+    .quick-link-card {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    border: 1px solid #e0e0e0;
+    }
+    .quick-link-card:hover {
+    background: #f8f8f8;
+    transform: translateY(-2px);
+    }
+    .quick-link-card h3 {
+    color: #1a1a1a;
+    font-size: 0.85rem;
+    font-weight: 500;
+    }
+    /* Recent Sales Cards */
+    .sales-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    }
+    .sale-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e0e0e0;
+    }
+    .sale-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    }
+    .sale-card p {
+    margin: 6px 0;
+    color: #666666;
+    font-size: 0.8rem;
+    }
+    .sale-card p:first-child {
+    color: #1a1a1a;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    }
+    .sale-card strong {
+    color: #1a1a1a;
+    margin-right: 6px;
+    }
+    .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666666;
+    font-style: italic;
+    }
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+    .container {
+    margin: 5px;
+    }
+    .dashboard-header h1 {
+    font-size: 1.3rem;
+    }
+    .stats-grid {
+    grid-template-columns: 1fr;
+    }
+    .stat-value {
+    font-size: 1.3rem;
+    }
+    .sales-grid {
+    grid-template-columns: 1fr;
+    }
+    .quick-links {
+    grid-template-columns: 1fr;
+    }
+    }
+
+include ../components/nav
+
+.container
+  // Header
+  .dashboard-header
+    h1 Sales Agent Dashboard
+    p.header-subtitle Track your sales performance
+  // Stats Overview
+  .stats-grid
+    .stat-card
+      h3 Total Sales
+      .stat-value 45
+      span.stat-change.positive +15% than last week
+      .chart-wrapper
+        canvas#salesChart.mini-chart
+    .stat-card
+      h3 Total Customers
+      .stat-value 32
+      span.stat-change.positive +8% than last week
+      .chart-wrapper
+        canvas#customersChart.mini-chart
+  // Stock Availability Section
+  .table-section
+    h2 Furniture Stock Availability
+    .chart-wrapper-large
+      canvas#furnitureChart
+  .table-section
+    h2 Wood Stock Availability
+    .chart-wrapper-large
+      canvas#woodChart
+  // Out of Stock Items
+  .table-section
+    h2 Out of Stock Items
+    table
+      thead
+        tr
+          th Item Type
+          th Item Name
+          th Status
+      tbody
+        tr
+          td Furniture
+          td Wardrobe
+          td.out-of-stock OUT OF STOCK
+        tr
+          td Wood
+          td Teak Wood
+          td.out-of-stock OUT OF STOCK
+        tr
+          td Furniture
+          td Coffee Table
+          td.out-of-stock OUT OF STOCK
+  // Quick Actions
+  .table-section
+    h2 Quick Actions
+    .quick-links
+      a.quick-link-card(href='/addcustomer')
+        h3 Add Customer
+      a.quick-link-card(href='/closesale')
+        h3 Close Sale
+      a.quick-link-card(href='/customers')
+        h3 View Customers
+  // Recent Sales
+  .table-section
+    h2 Recent Sales
+    .sales-grid
+      .sale-card
+        p Customer: Robert Mukasa
+        p
+          strong Total:
+          |  UGX 485,000
+        p
+          strong Date:
+          |  Nov 30, 2025
+      .sale-card
+        p Customer: Grace Nakato
+        p
+          strong Total:
+          |  UGX 320,000
+        p
+          strong Date:
+          |  Nov 29, 2025
+      .sale-card
+        p Customer: David Ssebunya
+        p
+          strong Total:
+          |  UGX 750,000
+        p
+          strong Date:
+          |  Nov 29, 2025
+      .sale-card
+        p Customer: Sarah Namukasa
+        p
+          strong Total:
+          |  UGX 210,000
+        p
+          strong Date:
+          |  Nov 28, 2025
+      .sale-card
+        p Customer: Peter Okello
+        p
+          strong Total:
+          |  UGX 540,000
+        p
+          strong Date:
+          |  Nov 28, 2025
+script.
+  // Line chart configuration for Sales and Customers
+  const lineChartConfig = {
+  type: 'line',
+  options: {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+  legend: {
+  display: false
+  },
+  tooltip: {
+  enabled: true,
+  displayColors: false,
+  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  padding: 8,
+  bodyFont: {
+  size: 11
+  },
+  callbacks: {
+  title: () => ''
+  }
+  }
+  },
+  interaction: {
+  intersect: false,
+  mode: 'index'
+  },
+  scales: {
+  x: {
+  display: false,
+  grid: {
+  display: false
+  }
+  },
+  y: {
+  display: false,
+  grid: {
+  display: false
+  },
+  beginAtZero: false
+  }
+  },
+  elements: {
+  point: {
+  radius: 2,
+  hitRadius: 8,
+  hoverRadius: 4,
+  backgroundColor: '#ffffff'
+  },
+  line: {
+  tension: 0.3,
+  borderWidth: 2
+  }
+  }
+  }
+  };
+  // Bar chart configuration for Stock
+  const barChartConfig = {
+  type: 'bar',
+  options: {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+  legend: {
+  display: false
+  },
+  tooltip: {
+  enabled: true,
+  displayColors: false,
+  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  padding: 8,
+  bodyFont: {
+  size: 11
+  }
+  }
+  },
+  scales: {
+  x: {
+  display: true,
+  grid: {
+  display: false
+  },
+  ticks: {
+  color: '#666666',
+  font: {
+  size: 10
+  }
+  }
+  },
+  y: {
+  display: true,
+  beginAtZero: true,
+  grid: {
+  color: 'rgba(0, 0, 0, 0.05)'
+  },
+  ticks: {
+  color: '#666666',
+  font: {
+  size: 10
+  },
+  stepSize: 2
+  }
+  }
+  }
+  }
+  };
+  // Sales Chart
+  new Chart(document.getElementById('salesChart'), {
+  ...lineChartConfig,
+  data: {
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  datasets: [{
+  data: [35, 38, 36, 40, 42, 44, 45],
+  borderColor: '#22c55e',
+  backgroundColor: 'transparent',
+  fill: false,
+  pointBackgroundColor: '#22c55e',
+  pointBorderColor: '#ffffff',
+  pointBorderWidth: 2
+  }]
+  }
+  });
+  // Customers Chart
+  new Chart(document.getElementById('customersChart'), {
+  ...lineChartConfig,
+  data: {
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  datasets: [{
+  data: [26, 28, 27, 29, 30, 31, 32],
+  borderColor: '#22c55e',
+  backgroundColor: 'transparent',
+  fill: false,
+  pointBackgroundColor: '#22c55e',
+  pointBorderColor: '#ffffff',
+  pointBorderWidth: 2
+  }]
+  }
+  });
+  // Furniture Stock Chart - with conditional colors
+  const furnitureData = [8, 3, 12, 2, 7, 4, 15];
+  const furnitureColors = furnitureData.map(qty => qty < 5 ? '#ef4444' : '#22c55e');
+  new Chart(document.getElementById('furnitureChart'), {
+  ...barChartConfig,
+  data: {
+  labels: ['Dining Table', 'Office Chair', 'Bed Frame', 'Bookshelf', 'Sofa', 'Desk', 'Cabinet'],
+  datasets: [{
+  data: furnitureData,
+  backgroundColor: furnitureColors,
+  borderRadius: 4,
+  barThickness: 30
+  }]
+  }
+  });
+  // Wood Stock Chart - with conditional colors
+  const woodData = [6, 2, 10, 4, 8, 3];
+  const woodColors = woodData.map(qty => qty < 5 ? '#ef4444' : '#22c55e');
+  new Chart(document.getElementById('woodChart'), {
+  ...barChartConfig,
+  data: {
+  labels: ['Mahogany', 'Oak', 'Pine', 'Teak', 'Cedar', 'Walnut'],
+  datasets: [{
+  data: woodData,
+  backgroundColor: woodColors,
+  borderRadius: 4,
+  barThickness: 30
+  }]
+  }
+  });

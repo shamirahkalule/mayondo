@@ -2,30 +2,203 @@ doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title MAYONDO WOOD &amp; FURNITURE
-.form
-  form(action='/signup' method='POST')
-    h3 Create account
-    label(for='fname') First name
-    input#fname(type='text' name='fname' placeholder='Enter first name' required='')
-    label(for='lname') Last name
-    input#lname(type='text' name='lname' placeholder='Enter last name' required='')
-    label(for='contact') Contact
-    input#contact(type='number' name='contact' placeholder='0777777777' required='')
-    label(for='location') Location
-    input#location(type='text' name='location' placeholder='Enter your location' required='')
-    label(for='role') Role
-        select#role(name="role") 
-          option(value="") Select role
-          option(value="Manager") Manager
-          option(value="Sales_agent") Sales agent
-    label(for='email') Email
-    input#email(type='email' name='email' placeholder='example@gmail.com' required='')
-    label(for='password') Password
-    input#password(type='password' name='password' placeholder='Enter password' required='')
-    label(for='confirmpassword') Confirm password
-    input#confirmpassword(type='password' name='confirmpassword' placeholder='Confirm password' required='')
-    button(type='submit') Submit
-  p
-    | Have an account? 
-    a(href='signin') Sign in
+  title Sign Up - MAYONDO WOOD &amp; FURNITURE
+  style.
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    }
+    body {
+    background-color: #fff;
+    color: #000;
+    margin: 0 100px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    }
+    .container {
+    width: 100%;
+    max-width: 450px;
+    }
+    .header {
+    text-align: center;
+    margin-bottom: 30px;
+    }
+    .header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    }
+    .header p {
+    color: #666;
+    margin-bottom: 20px;
+    }
+    .form {
+    padding: 30px;
+    border: 1px solid #000;
+    border-radius: 8px;
+    }
+    .form h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 22px;
+    }
+    .form-group {
+    margin-bottom: 20px;
+    }
+    .form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    }
+    .form input,
+    .form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    font-size: 14px;
+    }
+    .form button {
+    width: 100%;
+    padding: 14px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    }
+    .form button:hover {
+    background-color: #333;
+    }
+    .divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+    }
+    .divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #e0e0e0;
+    }
+    .divider span {
+    background-color: #fff;
+    padding: 0 15px;
+    color: #666;
+    font-size: 14px;
+    }
+    .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+    }
+    .google-btn:hover {
+    background-color: #f5f5f5;
+    }
+    .google-btn img {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    }
+    .form-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    }
+    .form-footer a {
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    }
+    .form-footer a:hover {
+    text-decoration: underline;
+    }
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+    body {
+    margin: 0 20px;
+    padding: 40px 0;
+    }
+    .container {
+    max-width: 100%;
+    }
+    .form {
+    padding: 20px;
+    }
+    }
+    @media (max-width: 480px) {
+    body {
+    margin: 0 15px;
+    }
+    .header h1 {
+    font-size: 24px;
+    }
+    .form {
+    padding: 15px;
+    }
+    .form h3 {
+    font-size: 20px;
+    }
+    }
+.container
+  .header
+    h1 MAYONDO WOOD &amp; FURNITURE
+    p Join our exclusive network of furniture professionals
+  .form
+    form(action='/signup' method='POST')
+      h3 Create Account
+      .form-group
+        label(for='fname') First name
+        input#fname(type='text' name='fname' placeholder='Enter first name' required='')
+      .form-group
+        label(for='lname') Last name
+        input#lname(type='text' name='lname' placeholder='Enter last name' required='')
+      .form-group
+        label(for='contact') Contact
+        input#contact(type='tel' name='contact' placeholder='0777777777' required='')
+      .form-group
+        label(for='location') Location
+        input#location(type='text' name='location' placeholder='Enter your location' required='')
+      .form-group
+        label(for='role') Role
+        select#role(name='role' required='')
+          option(value='') Select role
+          option(value='Manager') Manager
+          option(value='Sales_agent') Sales agent
+      .form-group
+        label(for='email') Email
+        input#email(type='email' name='email' placeholder='example@gmail.com' required='')
+      .form-group
+        label(for='password') Password
+        input#password(type='password' name='password' placeholder='Enter password' required='')
+      .form-group
+        label(for='confirmpassword') Confirm password
+        input#confirmpassword(type='password' name='confirmpassword' placeholder='Confirm password' required='')
+      button(type='submit') Submit
+      
+      .form-footer
+        p
+          | Already have an account? 
+          a(href='signin') Sign In

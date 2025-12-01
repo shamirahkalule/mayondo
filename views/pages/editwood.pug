@@ -2,61 +2,296 @@ doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title MAYONDO WOOD &amp; FURNITURE
-body 
-  include ../components/nav
-  h1 Edit Wood 
-  if wood.image
-    img.img-fluid(src=wood.image alt=wood.name style='max-width: 300px;')
-  form#editForm(data-wood-id=wood._id)
-    label(for='woodType') Wood type 
-    input#woodType(type='text' name='woodType' value=wood.woodType required)
-    label(for='woodName') Wood name
-    input#woodName(type='text' name='woodName' value=wood.woodName required)
-    label(for='quantity') Quantity
-    input#quantity(type='number' name='quantity' value=wood.quantity required)
-    label(for='costPrice') Cost Price (UGX)
-    input#costPrice(type='number' name='costPrice' value=wood.costPrice required)
-    label(for='productPrice') Product Price (UGX)
-    input#productPrice(type='number' name='productPrice' value=wood.productPrice required)
-    label(for='supplierName') Supplier Name
-    input#supplierName(type='text' name='supplierName' value=wood.supplierName required)
-    label(for='productQuality') Product Quality
-    input#productQuality(type='text' name='productQuality' value=wood.productQuality required)
-    label.form-label(for='color') Color (Optional)
-    input#color.form-control(type='text' name='color' value=wood.color)
-    label(for='measurement') Measurement (Optional)
-    input#measurement(type='text' name='measurement' value=wood.measurement)
-    button.btn.btn-primary(type='submit') Update Wood
-    a.btn.btn-secondary(href='/displaywood') Cancel
-
-  script.
-    document.getElementById('editForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const woodId = e.target.dataset.woodId;
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData);
-      
-      try {
-        const response = await fetch(`/editwood/${woodId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        });
-        
-        const result = await response.json();
-        
-        if (response.ok) {
-          alert('Wood updated successfully!');
-          window.location.href = '/displaywood';
-        } else {
-          alert(result.message || 'Error updating wood');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Error updating wood');
-      }
-    });
+  title Edit Wood - MAYONDO WOOD &amp; FURNITURE
+  style.
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    }
+    body {
+    background-color: #fff;
+    color: #000;
+    margin: 0 100px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    }
+    /* Navigation Styles */
+    .navbar {
+    background-color: #fff;
+    border-bottom: 1px solid #000;
+    padding: 15px 0;
+    margin-bottom: 30px;
+    }
+    .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+    .logo {
+    font-size: 24px;
+    font-weight: bold;
+    }
+    .nav-links {
+    display: flex;
+    gap: 20px;
+    }
+    .nav-links a {
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    }
+    .nav-links a:hover {
+    text-decoration: underline;
+    }
+    /* Page Header */
+    .page-header {
+    text-align: center;
+    margin-bottom: 30px;
+    }
+    .page-header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    }
+    /* Form Styles */
+    .form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    }
+    .form {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    border: 1px solid #000;
+    border-radius: 8px;
+    }
+    .image-preview {
+    text-align: center;
+    margin-bottom: 25px;
+    }
+    .image-preview img {
+    max-width: 300px;
+    height: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    }
+    .form-group {
+    margin-bottom: 20px;
+    }
+    .form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    }
+    .form input,
+    .form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    font-size: 14px;
+    }
+    .form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    }
+    .btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    }
+    .btn-primary {
+    background-color: #000;
+    color: #fff;
+    }
+    .btn-primary:hover {
+    background-color: #333;
+    }
+    .btn-secondary {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    }
+    .btn-secondary:hover {
+    background-color: #f5f5f5;
+    }
+    /* Footer Styles */
+    .footer {
+    background-color: #fff;
+    border-top: 1px solid #000;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto;
+    }
+    .footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    }
+    .footer-section {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 20px;
+    }
+    .footer-section h4 {
+    margin-bottom: 15px;
+    font-size: 16px;
+    }
+    .footer-section p, .footer-section a {
+    color: #666;
+    font-size: 14px;
+    text-decoration: none;
+    }
+    .footer-section a:hover {
+    text-decoration: underline;
+    }
+    .copyright {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    color: #666;
+    font-size: 14px;
+    }
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+    body {
+    margin: 0 20px;
+    }
+    .form {
+    padding: 20px;
+    }
+    .nav-container {
+    flex-direction: column;
+    gap: 15px;
+    }
+    .footer-content {
+    flex-direction: column;
+    }
+    .form-actions {
+    flex-direction: column;
+    }
+    }
+    @media (max-width: 480px) {
+    body {
+    margin: 0 15px;
+    }
+    .form {
+    padding: 15px;
+    }
+    .page-header h1 {
+    font-size: 24px;
+    }
+    .image-preview img {
+    max-width: 100%;
+    }
+    }
+// Navigation
+include ../components/nav
+// Main Content
+.page-header
+  h1 Edit Wood
+.form-container
+  .form
+    // Image Preview
+    .image-preview
+      img#woodImage(src='https://via.placeholder.com/300x200?text=Wood+Image' alt='Wood Image')
+    form#editForm(data-wood-id='12345')
+      .form-group
+        label(for='woodType') Wood Type
+        input#woodType(type='text' name='woodType' value='Mahogany' required='')
+      .form-group
+        label(for='woodName') Wood Name
+        input#woodName(type='text' name='woodName' value='African Mahogany' required='')
+      .form-group
+        label(for='quantity') Quantity
+        input#quantity(type='number' name='quantity' value='50' required='')
+      .form-group
+        label(for='costPrice') Cost Price (UGX)
+        input#costPrice(type='number' name='costPrice' value='150000' required='')
+      .form-group
+        label(for='productPrice') Product Price (UGX)
+        input#productPrice(type='number' name='productPrice' value='250000' required='')
+      .form-group
+        label(for='supplierName') Supplier Name
+        input#supplierName(type='text' name='supplierName' value='Timber Suppliers Ltd' required='')
+      .form-group
+        label(for='productQuality') Product Quality
+        input#productQuality(type='text' name='productQuality' value='Grade A' required='')
+      .form-group
+        label(for='color') Color (Optional)
+        input#color(type='text' name='color' value='Dark Brown')
+      .form-group
+        label(for='measurement') Measurement (Optional)
+        input#measurement(type='text' name='measurement' value='2x4 inches')
+      .form-actions
+        button.btn.btn-primary(type='submit') Update Wood
+        a.btn.btn-secondary(href='/displaywood') Cancel
+// Footer
+footer.footer
+  .footer-content
+    .footer-section
+      h4 MAYONDO WOOD &amp; FURNITURE
+      p Quality wood and furniture solutions
+    .footer-section
+      h4 Contact Us
+      p Email: info@mayondo.com
+      p Phone: +255 123 456 789
+    .footer-section
+      h4 Quick Links
+      p
+        a(href='about.html') About Us
+      p
+        a(href='contact.html') Contact
+      p
+        a(href='privacy.html') Privacy Policy
+  .copyright
+    | &copy; 2023 MAYONDO WOOD &amp; FURNITURE. All rights reserved.
+script.
+  document.getElementById('editForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const woodId = e.target.dataset.woodId;
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData);
+  try {
+  const response = await fetch(`/editwood/${woodId}`, {
+  method: 'PUT',
+  headers: {
+  'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+  });
+  const result = await response.json();
+  if (response.ok) {
+  alert('Wood updated successfully!');
+  window.location.href = '/displaywood';
+  } else {
+  alert(result.message || 'Error updating wood');
+  }
+  } catch (error) {
+  console.error('Error:', error);
+  alert('Error updating wood');
+  }
+  });
+  // Function to update image preview (you would replace this with actual image data)
+  function updateImagePreview(imageUrl) {
+  if (imageUrl) {
+  document.getElementById('woodImage').src = imageUrl;
+  }
+  }
+  // Example: Update image when page loads with actual data
+  // updateImagePreview('path/to/actual/wood/image.jpg');

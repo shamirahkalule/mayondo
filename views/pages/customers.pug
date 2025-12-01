@@ -1,0 +1,23 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Customers
+
+body 
+  include ../components/nav
+
+  h1 All Customers
+  
+  if customers && customers.length
+    each customer in customers
+      .customer-card
+        h3= customer.name
+        p Contact: #{customer.contact}
+        p Location: #{customer.location}
+        if customer.email
+          p Email: #{customer.email}
+  else
+    p No customers yet
+
+  include ../components/footer

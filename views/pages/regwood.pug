@@ -2,46 +2,224 @@ doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title MAYONDO WOOD &amp; FURNITURE
-
-body
+  title Register Wood Stock - MAYONDO WOOD &amp; FURNITURE
+  style.
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    }
+    body {
+    background-color: #fff;
+    color: #000;
+    margin: 0 100px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    }
+    /* Navigation Styles */
+    .navbar {
+    background-color: #fff;
+    border-bottom: 1px solid #000;
+    padding: 15px 0;
+    margin-bottom: 30px;
+    }
+    .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+    .logo {
+    font-size: 24px;
+    font-weight: bold;
+    }
+    .nav-links {
+    display: flex;
+    gap: 20px;
+    }
+    .nav-links a {
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    }
+    .nav-links a:hover {
+    text-decoration: underline;
+    }
+    /* Form Styles */
+    .form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    }
+    .form {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    border: 1px solid #000;
+    border-radius: 8px;
+    }
+    .form h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 22px;
+    }
+    .form-group {
+    margin-bottom: 20px;
+    }
+    .form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    }
+    .form input,
+    .form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    font-size: 14px;
+    }
+    .form button {
+    width: 100%;
+    padding: 14px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    }
+    .form button:hover {
+    background-color: #333;
+    }
+    /* Footer Styles */
+    .footer {
+    background-color: #fff;
+    border-top: 1px solid #000;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto;
+    }
+    .footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    }
+    .footer-section {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 20px;
+    }
+    .footer-section h4 {
+    margin-bottom: 15px;
+    font-size: 16px;
+    }
+    .footer-section p, .footer-section a {
+    color: #666;
+    font-size: 14px;
+    text-decoration: none;
+    }
+    .footer-section a:hover {
+    text-decoration: underline;
+    }
+    .copyright {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    color: #666;
+    font-size: 14px;
+    }
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+    body {
+    margin: 0 20px;
+    }
+    .form {
+    padding: 20px;
+    }
+    .nav-container {
+    flex-direction: column;
+    gap: 15px;
+    }
+    .footer-content {
+    flex-direction: column;
+    }
+    }
+    @media (max-width: 480px) {
+    body {
+    margin: 0 15px;
+    }
+    .form {
+    padding: 15px;
+    }
+    .form h3 {
+    font-size: 20px;
+    }
+    }
+// Navigation
 include ../components/nav
-
-.form
-  form(action='/regwood' method='POST' enctype='multipart/form-data')
-    h3 Register Wood Stock
-    label(for='woodType') Wood Type
-    input#woodType(type='text' name='woodType' placeholder='Enter wood type' required='')
-
-    label(for='woodName') Wood Name
-    input#woodName(type='text' name='woodName' placeholder='Enter wood name' required='')
-
-    label(for='quantity') Quantity
-    input#quantity(type='number' name='quantity' placeholder='Enter quantity' required='')
-
-    label(for='costPrice') Cost Price
-    input#costPrice(type='number' step='1' name='costPrice' required)
-
-    label(for='productPrice') Product Price
-    input#productPrice(type='number' name='productPrice' placeholder='Enter product price' required='')
-
-    label(for='supplierName') Supplier Name
-    input#supplierName(type='text' name='supplierName' placeholder='Enter supplier name' required='')
-
-    label(for='date') Date
-    input#date(type='date' name='date' placeholder='Enter date' required='')
-
-    label(for='productQuality') Product Quality
-    input#productQuality(type='text' name='productQuality' placeholder='Enter product Quality' required='')
-
-    label(for='color') Color
-    input#color(type='text' name='color' placeholder='Enter product color')
-
-    label(for='measurement') Measurements
-    input#measurement(type='number' name='measurement' placeholder='Enter product measurement')
-
-    label(for='image') Upload Image
-    input#image(type='file' name='image' placeholder='Upload an image')
-
-    button Submit
-include ../components/footer
+.form-container
+  .form
+    form(action='/regwood' method='POST' enctype='multipart/form-data')
+      h3 Register Wood Stock
+      .form-group
+        label(for='woodType') Wood Type
+        input#woodType(type='text' name='woodType' placeholder='Enter wood type' required='')
+      .form-group
+        label(for='woodName') Wood Name
+        input#woodName(type='text' name='woodName' placeholder='Enter wood name' required='')
+      .form-group
+        label(for='quantity') Quantity
+        input#quantity(type='number' name='quantity' placeholder='Enter quantity' required='')
+      .form-group
+        label(for='costPrice') Cost Price
+        input#costPrice(type='number' step='1' name='costPrice' placeholder='Enter cost price' required='')
+      .form-group
+        label(for='productPrice') Product Price
+        input#productPrice(type='number' name='productPrice' placeholder='Enter product price' required='')
+      .form-group
+        label(for='supplierName') Supplier Name
+        input#supplierName(type='text' name='supplierName' placeholder='Enter supplier name' required='')
+      .form-group
+        label(for='date') Date
+        input#date(type='date' name='date' required='')
+      .form-group
+        label(for='productQuality') Product Quality
+        input#productQuality(type='text' name='productQuality' placeholder='Enter product quality' required='')
+      .form-group
+        label(for='color') Color
+        input#color(type='text' name='color' placeholder='Enter product color')
+      .form-group
+        label(for='measurement') Measurements
+        input#measurement(type='number' name='measurement' placeholder='Enter product measurement')
+      .form-group
+        label(for='image') Upload Image
+        input#image(type='file' name='image' accept='image/*')
+      button(type='submit') Submit
+// Footer
+footer.footer
+  .footer-content
+    .footer-section
+      h4 MAYONDO WOOD &amp; FURNITURE
+      p Quality wood and furniture solutions
+    .footer-section
+      h4 Contact Us
+      p Email: info@mayondo.com
+      p Phone: +255 123 456 789
+    .footer-section
+      h4 Quick Links
+      p
+        a(href='about.html') About Us
+      p
+        a(href='contact.html') Contact
+      p
+        a(href='privacy.html') Privacy Policy
+  .copyright
+    | &copy; 2023 MAYONDO WOOD &amp; FURNITURE. All rights reserved.

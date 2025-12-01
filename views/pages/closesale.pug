@@ -1,0 +1,249 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Close Sale
+
+body 
+  include ../components/nav
+
+  h1 Close Sale
+  
+  .sale-form
+    form#saleForm
+      h3 Customer Details
+      
+      label(for='customerName') Select Customer
+      select#customerName(name='customerName' required='')
+        option(value='') Select a customer
+        each customer in customers
+          option(value=customer.name)= customer.name
+      
+      h3 Add Products
+      
+      #productList
+        .product-item
+          label Category
+          select.categorySelect(required='')
+            option(value='') Select category
+            option(value='furniture') Furniture
+            option(value='wood') Wood
+          
+          label Product
+          select.productSelect(name='product' required='' disabled='')
+            option(value='') First select a category
+          
+          // Hidden div to store all furniture data
+          .furniture-data(style='display:none')
+            each item in furniture
+              span.furniture-item(data-name=item.name data-price=item.productPrice)
+          
+          // Hidden div to store all wood data
+          .wood-data(style='display:none')
+            each item in wood
+              span.wood-item(data-name=item.woodName data-price=item.productPrice)
+          
+          label Quantity
+          input.quantityInput(type='number' name='quantity' min='1' value='1' required='')
+          
+          button.removeProduct(type='button') Remove
+      
+      button#addProduct(type='button') Add Another Product
+      
+      h3 Delivery
+      label
+        input#deliveryCheckbox(type='checkbox' name='delivery')
+        | Customer wants delivery (+5%)
+      
+      h3 Payment Method
+      label
+        input(type='radio' name='paymentMethod' value='Card' required='')
+        | Card
+      label
+        input(type='radio' name='paymentMethod' value='Cash')
+        | Cash
+      label
+        input(type='radio' name='paymentMethod' value='Transfer')
+        | Transfer
+      
+      .summary
+        h3 Summary
+        p Subtotal: UGX <span id=subtotal>0</span>
+        p Delivery Fee: UGX <span id=deliveryFee>0</span>
+        p Total: UGX <span id=total>0</span>
+      
+      button(type='submit') Complete Sale
+
+  script.
+    let productCount = 1;
+    
+    // Handle category change
+    document.addEventListener('change', function(e) {
+      if (e.target.classList.contains('categorySelect')) {
+        const productItem = e.target.closest('.product-item');
+        const productSelect = productItem.querySelector('.productSelect');
+        const category = e.target.value;
+        
+        // Clear previous options
+        productSelect.innerHTML = '<option value="">Select product</option>';
+        productSelect.disabled = false;
+        
+        if (category === 'furniture') {
+          // Get furniture data from hidden div
+          const furnitureItems = productItem.querySelectorAll('.furniture-data .furniture-item');
+          furnitureItems.forEach(item => {
+            const option = document.createElement('option');
+            const name = item.dataset.name;
+            const price = item.dataset.price;
+            option.value = name;
+            option.dataset.price = price;
+            option.textContent = name + ' - UGX ' + price;
+            productSelect.appendChild(option);
+          });
+        } else if (category === 'wood') {
+          // Get wood data from hidden div
+          const woodItems = productItem.querySelectorAll('.wood-data .wood-item');
+          woodItems.forEach(item => {
+            const option = document.createElement('option');
+            const name = item.dataset.name;
+            const price = item.dataset.price;
+            option.value = name;
+            option.dataset.price = price;
+            option.textContent = name + ' - UGX ' + price;
+            productSelect.appendChild(option);
+          });
+        }
+        
+        calculateTotal();
+      }
+    });
+    
+    // Add product button
+    document.getElementById('addProduct').addEventListener('click', function() {
+      const productList = document.getElementById('productList');
+      const newProduct = document.querySelector('.product-item').cloneNode(true);
+      
+      // Reset the new product item
+      newProduct.querySelector('.categorySelect').value = '';
+      newProduct.querySelector('.productSelect').innerHTML = '<option value="">First select a category</option>';
+      newProduct.querySelector('.productSelect').disabled = true;
+      newProduct.querySelector('.quantityInput').value = '1';
+      
+      productList.appendChild(newProduct);
+      calculateTotal();
+    });
+    
+    // Remove product
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('removeProduct')) {
+        const productItems = document.querySelectorAll('.product-item');
+        if (productItems.length > 1) {
+          e.target.closest('.product-item').remove();
+          calculateTotal();
+        } else {
+          alert('You must have at least one product');
+        }
+      }
+    });
+    
+    // Calculate total when product or quantity changes
+    document.addEventListener('input', calculateTotal);
+    
+    function calculateTotal() {
+      let subtotal = 0;
+      
+      document.querySelectorAll('.product-item').forEach(item => {
+        const select = item.querySelector('.productSelect');
+        const quantity = item.querySelector('.quantityInput').value;
+        const selectedOption = select.options[select.selectedIndex];
+        const price = selectedOption ? selectedOption.dataset.price : 0;
+        
+        if (price && quantity) {
+          subtotal += parseFloat(price) * parseInt(quantity);
+        }
+      });
+      
+      document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+      
+      let deliveryFee = 0;
+      if (document.getElementById('deliveryCheckbox').checked) {
+        deliveryFee = subtotal * 0.05;
+      }
+      
+      document.getElementById('deliveryFee').textContent = deliveryFee.toFixed(2);
+      
+      const total = subtotal + deliveryFee;
+      document.getElementById('total').textContent = total.toFixed(2);
+    }
+    
+    // Submit form
+    document.getElementById('saleForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const customerName = document.getElementById('customerName').value;
+      const items = [];
+      
+      document.querySelectorAll('.product-item').forEach(item => {
+        const select = item.querySelector('.productSelect');
+        const productName = select.value;
+        const selectedOption = select.options[select.selectedIndex];
+        const productPrice = selectedOption ? parseFloat(selectedOption.dataset.price) : 0;
+        const quantity = parseInt(item.querySelector('.quantityInput').value);
+        
+        if (productName && productPrice && quantity) {
+          items.push({
+            productName: productName,
+            productPrice: productPrice,
+            quantity: quantity
+          });
+        }
+      });
+      
+      if (items.length === 0) {
+        alert('Please add at least one product');
+        return;
+      }
+      
+      const subtotal = parseFloat(document.getElementById('subtotal').textContent);
+      const delivery = document.getElementById('deliveryCheckbox').checked;
+      const deliveryFee = parseFloat(document.getElementById('deliveryFee').textContent);
+      const total = parseFloat(document.getElementById('total').textContent);
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+      
+      const today = new Date();
+      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      
+      const saleData = {
+        customerName: customerName,
+        items: items,
+        subtotal: subtotal,
+        delivery: delivery,
+        deliveryFee: deliveryFee,
+        total: total,
+        paymentMethod: paymentMethod,
+        date: date,
+        salesAgent: 'Current User'
+      };
+      
+      try {
+        const response = await fetch('/closesale', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(saleData)
+        });
+        
+        if (response.ok) {
+          alert('Sale completed successfully!');
+          window.location.href = '/dashboard';
+        } else {
+          alert('Error completing sale');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error completing sale');
+      }
+    });
+
+  include ../components/footer

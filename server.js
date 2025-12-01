@@ -18,6 +18,8 @@ const User = require("./models/User");
 const homeRoutes = require("./routes/homeRoutes");
 const authRoutes = require("./routes/authRoutes");
 const stockRoutes = require("./routes/stockRoutes");
+const salesRoutes = require("./routes/salesRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const { error } = require("console");
 
 //2. instantiation
@@ -58,6 +60,8 @@ passport.deserializeUser(User.deserializeUser());
 app.use("/", homeRoutes);
 app.use("/", authRoutes);
 app.use("/", stockRoutes);
+app.use("/", salesRoutes);
+app.use("/", adminRoutes);
 
 // Handling non-existing routes (404) - should come after all routes
 app.use((req, res) => {

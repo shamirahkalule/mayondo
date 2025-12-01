@@ -1,0 +1,28 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Add Customer
+
+body 
+  include ../components/nav
+
+  .form
+    form(action='/addcustomer' method='POST')
+      h3 Add New Customer
+      
+      label(for='name') Customer Name
+      input#name(type='text' name='name' placeholder='Enter customer name' required='')
+      
+      label(for='contact') Contact
+      input#contact(type='number' name='contact' placeholder='0777777777' required='')
+      
+      label(for='location') Location
+      input#location(type='text' name='location' placeholder='Enter location' required='')
+      
+      label(for='email') Email (Optional)
+      input#email(type='email' name='email' placeholder='example@gmail.com')
+      
+      button Submit
+
+  include ../components/footer
