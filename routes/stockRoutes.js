@@ -92,15 +92,26 @@ router.get("/regfurniture", (req, res) => {
   res.render("regfurniture");
 });
 
-router.post("/regfurniture", async (req, res) => {
-  try {
-    const newFurniture = new Furniturestock(req.body);
-    await newFurniture.save();
-    res.redirect("/displayfurniture");
-  } catch (error) {
-    console.error("Error registering furniture:", error);
-    res.status(500).send("Error registering furniture");
-  }
+router.post("/regfurniture", upload.single("image"), async(req, res) => {
+    try{
+        if (!req.body || Object.keys(req.body).length === 0) {
+            console.error('req.body is empty!');
+            return res.status(400).send('Form data is empty');
+        }
+
+        const data = {
+            ...req.body,                  
+            image: req.file ? `/images/uploads/${req.file.filename}` : null ,     
+        };
+
+        const newFurniture = new Furniturestock(data);
+        await newFurniture.save()
+        res.redirect("/")
+
+    }catch(error) {
+        console.error(error);
+        res.redirect("/regfurniture")
+    }
 });
 
 // Register Wood Routes
