@@ -2,43 +2,142 @@ doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title All Sales
+  title All Sales - MAYONDO WOOD &amp; FURNITURE
+  style.
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #fff;
+      color: #000;
+      margin: 0 100px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .page-header {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 50px;
+    }
+    .sales-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .sales-table th {
+      background-color: #000;
+      color: #fff;
+      border: 1px solid #000;
+      padding: 12px 8px;
+      text-align: left;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .sales-table td {
+      border: 1px solid #000;
+      padding: 12px 8px;
+      font-size: 14px;
+    }
+    .sales-table tr:nth-child(even) {
+      background-color: #f5f5f5;
+    }
+    .sales-table tr:hover {
+      background-color: #e0e0e0;
+    }
+    .item-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .item-list div {
+      padding: 2px 0;
+    }
+    .total-cell {
+      font-weight: bold;
+    }
+    .delivery-yes {
+      color: #388e3c;
+      font-weight: bold;
+    }
+    .delivery-no {
+      color: #666;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+    .empty-state p {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 768px) {
+      body {
+        margin: 0 20px;
+      }
+      .sales-table {
+        font-size: 12px;
+      }
+      .sales-table th,
+      .sales-table td {
+        padding: 8px 4px;
+      }
+    }
 
 body 
   include ../components/nav
 
-  h1 All Sales Records
-  
-  if sales && sales.length > 0
-    table(style='width: 100%; border-collapse: collapse;')
-      thead
-        tr
-          th(style='border: 1px solid #ddd; padding: 8px; background: #f2f2f2;') Date
-          th(style='border: 1px solid #ddd; padding: 8px; background: #f2f2f2;') Customer
-          th(style='border: 1px solid #ddd; padding: 8px; background: #f2f2f2;') Agent
-          th(style='border: 1px solid #ddd; padding: 8px; background: #f2f2f2;') Items
-          th(style='border: 1px solid #ddd; padding: 8px; background: #f2f2f2;') Subtotal
-          th(style='border: 1px solid #ddd; padding: 8px; background: #f2f2f2;') Delivery
-          th(style='border: 1px solid #ddd; padding: 8px; background: #f2f2f2;') Total
-          th(style='border: 1px solid #ddd; padding: 8px; background: #f2f2f2;') Payment
-      tbody
-        each sale in sales
+  .page-header
+    h1 All Sales Records
+
+  .table-container
+    if sales && sales.length > 0
+      table.sales-table
+        thead
           tr
-            td(style='border: 1px solid #ddd; padding: 8px;')= sale.date
-            td(style='border: 1px solid #ddd; padding: 8px;')= sale.customerName
-            td(style='border: 1px solid #ddd; padding: 8px;')= sale.salesAgent
-            td(style='border: 1px solid #ddd; padding: 8px;')
-              each item in sale.items
-                div #{item.productName} (x#{item.quantity})
-            td(style='border: 1px solid #ddd; padding: 8px;') UGX #{sale.subtotal.toFixed(2)}
-            td(style='border: 1px solid #ddd; padding: 8px;')
-              if sale.delivery
-                span Yes (UGX #{sale.deliveryFee.toFixed(2)})
-              else
-                span No
-            td(style='border: 1px solid #ddd; padding: 8px; font-weight: bold;') UGX #{sale.total.toFixed(2)}
-            td(style='border: 1px solid #ddd; padding: 8px;')= sale.paymentMethod
-  else
-    p No sales records found
+            th Date
+            th Customer
+            th Agent
+            th Items
+            th Subtotal
+            th Delivery
+            th Total
+            th Payment
+        tbody
+          each sale in sales
+            tr
+              td= sale.date
+              td= sale.customerName
+              td= sale.salesAgent
+              td
+                .item-list
+                  each item in sale.items
+                    div #{item.productName} (x#{item.quantity})
+              td UGX #{sale.subtotal.toLocaleString()}
+              td
+                if sale.delivery
+                  span.delivery-yes Yes (UGX #{sale.deliveryFee.toLocaleString()})
+                else
+                  span.delivery-no No
+              td.total-cell UGX #{sale.total.toLocaleString()}
+              td= sale.paymentMethod
+    else
+      .empty-state
+        p No sales records found
+        p Start by closing your first sale!
 
   include ../components/footer

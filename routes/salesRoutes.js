@@ -97,6 +97,17 @@ router.get("/dashboard", async (req, res) => {
     }
 });
 
+// All Sales route
+router.get("/allsales", async (req, res) => {
+    try {
+        const sales = await Sale.find().sort({date: -1});
+        res.render("allsales", {sales});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error loading sales");
+    }
+});
+
 // Customer routes
 router.get("/addcustomer", (req, res) => {
     res.render("addcustomer");
@@ -138,6 +149,11 @@ router.get("/closesale", async (req, res) => {
 
 router.post("/closesale", async (req, res) => {
     try {
+        // Parse items if it's a JSON string
+        if (typeof req.body.items === 'string') {
+            req.body.items = JSON.parse(req.body.items);
+        }
+        
         const newSale = new Sale(req.body);
         await newSale.save();
         res.redirect("/dashboard");

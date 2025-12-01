@@ -2,80 +2,312 @@ doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title Close Sale
+  title Close Sale - MAYONDO WOOD &amp; FURNITURE
+  style.
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #fff;
+      color: #000;
+      margin: 0 100px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .page-header {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .sale-form {
+      max-width: 800px;
+      margin: 0 auto 50px;
+      padding: 30px;
+      border: 2px solid #000;
+      border-radius: 4px;
+    }
+    .form-section {
+      margin-bottom: 30px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .form-section:last-of-type {
+      border-bottom: none;
+    }
+    .form-section h3 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #000;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    .form-group select,
+    .form-group input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #000;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: #fff;
+    }
+    .form-group select:focus,
+    .form-group input:focus {
+      outline: none;
+      border: 2px solid #000;
+    }
+    .form-group select:disabled {
+      background-color: #f5f5f5;
+      color: #999;
+      cursor: not-allowed;
+    }
+    .product-item {
+      padding: 20px;
+      margin-bottom: 15px;
+      border: 2px solid #000;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      position: relative;
+    }
+    .product-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .product-item-title {
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+    .btn-remove {
+      padding: 8px 16px;
+      background-color: #fff;
+      color: #000;
+      border: 2px solid #000;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-remove:hover {
+      background-color: #000;
+      color: #fff;
+    }
+    .btn-add {
+      width: 100%;
+      padding: 12px;
+      background-color: #fff;
+      color: #000;
+      border: 2px solid #000;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    .btn-add:hover {
+      background-color: #000;
+      color: #fff;
+    }
+    .radio-group,
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .radio-group label,
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      font-weight: normal;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .radio-group input[type="radio"],
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 8px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .summary {
+      background-color: #f5f5f5;
+      padding: 20px;
+      border: 2px solid #000;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .summary h3 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #000;
+    }
+    .summary p {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      font-size: 15px;
+    }
+    .summary p:last-child {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 2px solid #000;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-submit:hover {
+      background-color: #333;
+    }
+    .hidden {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      body {
+        margin: 0 20px;
+      }
+      .sale-form {
+        padding: 20px;
+      }
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+      .product-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .btn-remove {
+        width: 100%;
+      }
+    }
 
 body 
   include ../components/nav
 
-  h1 Close Sale
-  
+  .page-header
+    h1 Close Sale
+
   .sale-form
     form#saleForm
-      h3 Customer Details
+      .form-section
+        h3 Customer Details
+        .form-group
+          label(for='customerName') Select Customer
+          select#customerName(name='customerName' required='')
+            option(value='') Select a customer
+            each customer in customers
+              option(value=customer.name)= customer.name
       
-      label(for='customerName') Select Customer
-      select#customerName(name='customerName' required='')
-        option(value='') Select a customer
-        each customer in customers
-          option(value=customer.name)= customer.name
+      .form-section
+        h3 Add Products
+        #productList
+          .product-item
+            .product-item-header
+              .product-item-title Product 1
+              button.btn-remove.removeProduct(type='button') Remove
+            .product-grid
+              .form-group
+                label Category
+                select.categorySelect(required='')
+                  option(value='') Select category
+                  option(value='furniture') Furniture
+                  option(value='wood') Wood
+              
+              .form-group
+                label Product
+                select.productSelect(name='product' required='' disabled='')
+                  option(value='') First select a category
+              
+              .form-group
+                label Quantity
+                input.quantityInput(type='number' name='quantity' min='1' value='1' required='')
+            
+            .hidden.furniture-data
+              each item in furniture
+                span.furniture-item(data-name=item.name data-price=item.productPrice)
+            
+            .hidden.wood-data
+              each item in wood
+                span.wood-item(data-name=item.woodName data-price=item.productPrice)
+        
+        button.btn-add#addProduct(type='button') + Add Another Product
       
-      h3 Add Products
+      .form-section
+        h3 Delivery Options
+        .checkbox-group
+          label
+            input#deliveryCheckbox(type='checkbox' name='delivery')
+            | Customer wants delivery (+5% delivery fee)
       
-      #productList
-        .product-item
-          label Category
-          select.categorySelect(required='')
-            option(value='') Select category
-            option(value='furniture') Furniture
-            option(value='wood') Wood
-          
-          label Product
-          select.productSelect(name='product' required='' disabled='')
-            option(value='') First select a category
-          
-          // Hidden div to store all furniture data
-          .furniture-data(style='display:none')
-            each item in furniture
-              span.furniture-item(data-name=item.name data-price=item.productPrice)
-          
-          // Hidden div to store all wood data
-          .wood-data(style='display:none')
-            each item in wood
-              span.wood-item(data-name=item.woodName data-price=item.productPrice)
-          
-          label Quantity
-          input.quantityInput(type='number' name='quantity' min='1' value='1' required='')
-          
-          button.removeProduct(type='button') Remove
-      
-      button#addProduct(type='button') Add Another Product
-      
-      h3 Delivery
-      label
-        input#deliveryCheckbox(type='checkbox' name='delivery')
-        | Customer wants delivery (+5%)
-      
-      h3 Payment Method
-      label
-        input(type='radio' name='paymentMethod' value='Card' required='')
-        | Card
-      label
-        input(type='radio' name='paymentMethod' value='Cash')
-        | Cash
-      label
-        input(type='radio' name='paymentMethod' value='Transfer')
-        | Transfer
+      .form-section
+        h3 Payment Method
+        .radio-group
+          label
+            input(type='radio' name='paymentMethod' value='Cash' required='')
+            | Cash
+          label
+            input(type='radio' name='paymentMethod' value='Card')
+            | Card
+          label
+            input(type='radio' name='paymentMethod' value='Mobile Money')
+            | Mobile Money
+          label
+            input(type='radio' name='paymentMethod' value='Bank Transfer')
+            | Bank Transfer
       
       .summary
-        h3 Summary
-        p Subtotal: UGX <span id=subtotal>0</span>
-        p Delivery Fee: UGX <span id=deliveryFee>0</span>
-        p Total: UGX <span id=total>0</span>
+        h3 Order Summary
+        p
+          span Subtotal:
+          span UGX <span id="subtotal">0.00</span>
+        p
+          span Delivery Fee:
+          span UGX <span id="deliveryFee">0.00</span>
+        p
+          span Total Amount:
+          span UGX <span id="total">0.00</span>
       
-      button(type='submit') Complete Sale
+      button.btn-submit(type='submit') Complete Sale
 
   script.
-    let productCount = 1;
+    let productCounter = 1;
     
     // Handle category change
     document.addEventListener('change', function(e) {
@@ -84,12 +316,10 @@ body
         const productSelect = productItem.querySelector('.productSelect');
         const category = e.target.value;
         
-        // Clear previous options
         productSelect.innerHTML = '<option value="">Select product</option>';
         productSelect.disabled = false;
         
         if (category === 'furniture') {
-          // Get furniture data from hidden div
           const furnitureItems = productItem.querySelectorAll('.furniture-data .furniture-item');
           furnitureItems.forEach(item => {
             const option = document.createElement('option');
@@ -97,11 +327,10 @@ body
             const price = item.dataset.price;
             option.value = name;
             option.dataset.price = price;
-            option.textContent = name + ' - UGX ' + price;
+            option.textContent = name + ' - UGX ' + parseFloat(price).toLocaleString();
             productSelect.appendChild(option);
           });
         } else if (category === 'wood') {
-          // Get wood data from hidden div
           const woodItems = productItem.querySelectorAll('.wood-data .wood-item');
           woodItems.forEach(item => {
             const option = document.createElement('option');
@@ -109,7 +338,7 @@ body
             const price = item.dataset.price;
             option.value = name;
             option.dataset.price = price;
-            option.textContent = name + ' - UGX ' + price;
+            option.textContent = name + ' - UGX ' + parseFloat(price).toLocaleString();
             productSelect.appendChild(option);
           });
         }
@@ -120,8 +349,13 @@ body
     
     // Add product button
     document.getElementById('addProduct').addEventListener('click', function() {
+      productCounter++;
       const productList = document.getElementById('productList');
-      const newProduct = document.querySelector('.product-item').cloneNode(true);
+      const firstProduct = document.querySelector('.product-item');
+      const newProduct = firstProduct.cloneNode(true);
+      
+      // Update product title
+      newProduct.querySelector('.product-item-title').textContent = 'Product ' + productCounter;
       
       // Reset the new product item
       newProduct.querySelector('.categorySelect').value = '';
@@ -139,6 +373,11 @@ body
         const productItems = document.querySelectorAll('.product-item');
         if (productItems.length > 1) {
           e.target.closest('.product-item').remove();
+          // Renumber products
+          document.querySelectorAll('.product-item').forEach((item, index) => {
+            item.querySelector('.product-item-title').textContent = 'Product ' + (index + 1);
+          });
+          productCounter = productItems.length - 1;
           calculateTotal();
         } else {
           alert('You must have at least one product');
@@ -146,8 +385,9 @@ body
       }
     });
     
-    // Calculate total when product or quantity changes
+    // Calculate total when anything changes
     document.addEventListener('input', calculateTotal);
+    document.addEventListener('change', calculateTotal);
     
     function calculateTotal() {
       let subtotal = 0;
@@ -156,24 +396,24 @@ body
         const select = item.querySelector('.productSelect');
         const quantity = item.querySelector('.quantityInput').value;
         const selectedOption = select.options[select.selectedIndex];
-        const price = selectedOption ? selectedOption.dataset.price : 0;
+        const price = selectedOption && selectedOption.dataset.price ? selectedOption.dataset.price : 0;
         
         if (price && quantity) {
           subtotal += parseFloat(price) * parseInt(quantity);
         }
       });
       
-      document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+      document.getElementById('subtotal').textContent = subtotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       
       let deliveryFee = 0;
       if (document.getElementById('deliveryCheckbox').checked) {
         deliveryFee = subtotal * 0.05;
       }
       
-      document.getElementById('deliveryFee').textContent = deliveryFee.toFixed(2);
+      document.getElementById('deliveryFee').textContent = deliveryFee.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       
       const total = subtotal + deliveryFee;
-      document.getElementById('total').textContent = total.toFixed(2);
+      document.getElementById('total').textContent = total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
     
     // Submit form
@@ -181,13 +421,18 @@ body
       e.preventDefault();
       
       const customerName = document.getElementById('customerName').value;
+      if (!customerName) {
+        alert('Please select a customer');
+        return;
+      }
+      
       const items = [];
       
       document.querySelectorAll('.product-item').forEach(item => {
         const select = item.querySelector('.productSelect');
         const productName = select.value;
         const selectedOption = select.options[select.selectedIndex];
-        const productPrice = selectedOption ? parseFloat(selectedOption.dataset.price) : 0;
+        const productPrice = selectedOption && selectedOption.dataset.price ? parseFloat(selectedOption.dataset.price) : 0;
         const quantity = parseInt(item.querySelector('.quantityInput').value);
         
         if (productName && productPrice && quantity) {
@@ -204,14 +449,26 @@ body
         return;
       }
       
-      const subtotal = parseFloat(document.getElementById('subtotal').textContent);
+      const paymentMethodElement = document.querySelector('input[name="paymentMethod"]:checked');
+      if (!paymentMethodElement) {
+        alert('Please select a payment method');
+        return;
+      }
+      
+      const subtotalText = document.getElementById('subtotal').textContent.replace(/,/g, '');
+      const deliveryFeeText = document.getElementById('deliveryFee').textContent.replace(/,/g, '');
+      const totalText = document.getElementById('total').textContent.replace(/,/g, '');
+      
+      const subtotal = parseFloat(subtotalText);
       const delivery = document.getElementById('deliveryCheckbox').checked;
-      const deliveryFee = parseFloat(document.getElementById('deliveryFee').textContent);
-      const total = parseFloat(document.getElementById('total').textContent);
-      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+      const deliveryFee = parseFloat(deliveryFeeText);
+      const total = parseFloat(totalText);
+      const paymentMethod = paymentMethodElement.value;
       
       const today = new Date();
-      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      const date = today.getFullYear() + '-' + 
+                   String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                   String(today.getDate()).padStart(2, '0');
       
       const saleData = {
         customerName: customerName,
@@ -222,28 +479,33 @@ body
         total: total,
         paymentMethod: paymentMethod,
         date: date,
-        salesAgent: 'Current User'
+        salesAgent: 'Sales Agent'
       };
       
-      try {
-        const response = await fetch('/closesale', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(saleData)
-        });
-        
-        if (response.ok) {
-          alert('Sale completed successfully!');
-          window.location.href = '/dashboard';
+      // Create a hidden form to submit
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/closesale';
+      
+      // Add all data as hidden inputs
+      for (const key in saleData) {
+        if (key === 'items') {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = JSON.stringify(saleData[key]);
+          form.appendChild(input);
         } else {
-          alert('Error completing sale');
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = saleData[key];
+          form.appendChild(input);
         }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Error completing sale');
       }
+      
+      document.body.appendChild(form);
+      form.submit();
     });
 
   include ../components/footer

@@ -2,44 +2,166 @@ doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title MAYONDO WOOD &amp; FURNITURE
+  title Wood Stock - MAYONDO WOOD &amp; FURNITURE
+  style.
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #fff;
+      color: #000;
+      margin: 0 100px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .page-header {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .wood-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+    .wood-card {
+      border: 2px solid #000;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .wood-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+    .wood-image {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-right: 2px solid #000;
+    }
+    .wood-details {
+      padding: 20px;
+      flex: 1;
+    }
+    .wood-details h3 {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #000;
+    }
+    .wood-details p {
+      margin: 8px 0;
+      font-size: 14px;
+      color: #333;
+    }
+    .wood-details p strong {
+      color: #000;
+      font-weight: bold;
+      min-width: 100px;
+      display: inline-block;
+    }
+    .date-added {
+      font-size: 12px;
+      color: #666;
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .edit-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #000;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .edit-btn:hover {
+      background-color: #333;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+    @media (max-width: 768px) {
+      body {
+        margin: 0 20px;
+      }
+      .wood-grid {
+        grid-template-columns: 1fr;
+      }
+      .wood-card {
+        flex-direction: column;
+      }
+      .wood-image {
+        width: 100%;
+        height: 250px;
+        border-right: none;
+        border-bottom: 2px solid #000;
+      }
+    }
 
 body 
-include ../components/nav
+  include ../components/nav
 
-h1 Available wood
+  .page-header
+    h1 Available Wood
  
-if woodList && woodList.length
-  each item in woodList
-    .card.mb-3(style='max-width: 640px;')
-      .row.g-0
-        .col-md-4
-            img.img-fluid.rounded-start(src=item.image alt=item.woodName)
-        .col-md-8
-          .card-body
-            h3.card-title= item.woodName
-            p.card-text
-              | Type: #{item.woodType}
-            p.card-text
-              | Quantity: #{item.quantity}
-            p.card-text
-              | Cost Price: UGX #{item.costPrice}
-            p.card-text
-              | Product Price: UGX #{item.productPrice}
-            p.card-text
-              | Supplier: #{item.supplierName}
-            p.card-text
-              | Quality: #{item.productQuality}
+  if woodList && woodList.length
+    .wood-grid
+      each item in woodList
+        .wood-card
+          img.wood-image(src=item.image alt=item.woodName)
+          .wood-details
+            h3= item.woodName
+            p
+              strong Type:
+              |  #{item.woodType}
+            p
+              strong Quantity:
+              |  #{item.quantity}
+            p
+              strong Cost Price:
+              |  UGX #{item.costPrice.toLocaleString()}
+            p
+              strong Product Price:
+              |  UGX #{item.productPrice.toLocaleString()}
+            p
+              strong Supplier:
+              |  #{item.supplierName}
+            p
+              strong Quality:
+              |  #{item.productQuality}
             if item.color
-              p.card-text Color: #{item.color}
+              p
+                strong Color:
+                |  #{item.color}
             if item.measurement
-              p.card-text Measurement: #{item.measurement}
-            p.card-text
-              small.text-body-secondary Added on #{item.date}
-      a.btn.btn-primary(href=`/editwood/${item._id}`) Edit
+              p
+                strong Measurement:
+                |  #{item.measurement}
+            p.date-added Added on #{item.date}
+            a.edit-btn(href=`/editwood/${item._id}`) Edit
+  else
+    .empty-state
+      p Loading ...
 
-else
-  p Loading ...
-
-
-include ../components/footer
+  include ../components/footer

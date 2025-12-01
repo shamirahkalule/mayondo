@@ -18,34 +18,7 @@ head
     display: flex;
     flex-direction: column;
     }
-    /* Navigation Styles */
-    .navbar {
-    background-color: #fff;
-    border-bottom: 1px solid #000;
-    padding: 15px 0;
-    margin-bottom: 30px;
-    }
-    .nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    }
-    .logo {
-    font-size: 24px;
-    font-weight: bold;
-    }
-    .nav-links {
-    display: flex;
-    gap: 20px;
-    }
-    .nav-links a {
-    color: #000;
-    text-decoration: none;
-    font-weight: bold;
-    }
-    .nav-links a:hover {
-    text-decoration: underline;
-    }
+  
     /* Form Styles */
     .form-container {
     flex: 1;
@@ -99,43 +72,7 @@ head
     .form button:hover {
     background-color: #333;
     }
-    /* Footer Styles */
-    .footer {
-    background-color: #fff;
-    border-top: 1px solid #000;
-    padding: 20px 0;
-    text-align: center;
-    margin-top: auto;
-    }
-    .footer-content {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    }
-    .footer-section {
-    flex: 1;
-    min-width: 200px;
-    margin-bottom: 20px;
-    }
-    .footer-section h4 {
-    margin-bottom: 15px;
-    font-size: 16px;
-    }
-    .footer-section p, .footer-section a {
-    color: #666;
-    font-size: 14px;
-    text-decoration: none;
-    }
-    .footer-section a:hover {
-    text-decoration: underline;
-    }
-    .copyright {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-    color: #666;
-    font-size: 14px;
-    }
+    
     /* Mobile responsiveness */
     @media (max-width: 768px) {
     body {
@@ -144,10 +81,7 @@ head
     .form {
     padding: 20px;
     }
-    .nav-container {
-    flex-direction: column;
-    gap: 15px;
-    }
+    
     .footer-content {
     flex-direction: column;
     }
@@ -203,23 +137,4 @@ include ../components/nav
         label(for='image') Upload Image
         input#image(type='file' name='image' accept='image/*')
       button(type='submit') Submit
-// Footer
-footer.footer
-  .footer-content
-    .footer-section
-      h4 MAYONDO WOOD &amp; FURNITURE
-      p Quality wood and furniture solutions
-    .footer-section
-      h4 Contact Us
-      p Email: info@mayondo.com
-      p Phone: +255 123 456 789
-    .footer-section
-      h4 Quick Links
-      p
-        a(href='about.html') About Us
-      p
-        a(href='contact.html') Contact
-      p
-        a(href='privacy.html') Privacy Policy
-  .copyright
-    | &copy; 2023 MAYONDO WOOD &amp; FURNITURE. All rights reserved.
+  include ../components/footer

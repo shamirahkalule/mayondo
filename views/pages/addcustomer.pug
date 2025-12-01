@@ -2,27 +2,124 @@ doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title Add Customer
+  title Add Customer - MAYONDO WOOD &amp; FURNITURE
+  style.
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #fff;
+      color: #000;
+      margin: 0 100px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .page-header {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto 50px;
+      padding: 30px;
+      border: 2px solid #000;
+      border-radius: 4px;
+    }
+    .form-container h3 {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 25px;
+      text-align: center;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #000;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #000;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: #fff;
+    }
+    .form-group input:focus {
+      outline: none;
+      border: 2px solid #000;
+    }
+    .form-group input::placeholder {
+      color: #999;
+    }
+    .optional-label {
+      color: #666;
+      font-size: 12px;
+      font-weight: normal;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .submit-btn:hover {
+      background-color: #333;
+    }
+    @media (max-width: 768px) {
+      body {
+        margin: 0 20px;
+      }
+      .form-container {
+        padding: 20px;
+      }
+    }
 
 body 
   include ../components/nav
 
-  .form
+  .page-header
+    h1 Add New Customer
+
+  .form-container
     form(action='/addcustomer' method='POST')
-      h3 Add New Customer
+      .form-group
+        label(for='name') Customer Name
+        input#name(type='text' name='name' placeholder='Enter customer name' required='')
       
-      label(for='name') Customer Name
-      input#name(type='text' name='name' placeholder='Enter customer name' required='')
+      .form-group
+        label(for='contact') Contact
+        input#contact(type='number' name='contact' placeholder='0777777777' required='')
       
-      label(for='contact') Contact
-      input#contact(type='number' name='contact' placeholder='0777777777' required='')
+      .form-group
+        label(for='location') Location
+        input#location(type='text' name='location' placeholder='Enter location' required='')
       
-      label(for='location') Location
-      input#location(type='text' name='location' placeholder='Enter location' required='')
+      .form-group
+        label(for='email') 
+          | Email 
+          span.optional-label (Optional)
+        input#email(type='email' name='email' placeholder='example@gmail.com')
       
-      label(for='email') Email (Optional)
-      input#email(type='email' name='email' placeholder='example@gmail.com')
-      
-      button Submit
+      button.submit-btn(type='submit') Submit
 
   include ../components/footer
