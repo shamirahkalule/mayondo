@@ -18,45 +18,14 @@ head
     display: flex;
     flex-direction: column;
     }
-    /* Navigation Styles */
-    .navbar {
-    background-color: #fff;
-    border-bottom: 1px solid #000;
-    padding: 15px 0;
-    margin-bottom: 30px;
-    }
-    .nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    }
-    .logo {
-    font-size: 24px;
-    font-weight: bold;
-    }
-    .nav-links {
-    display: flex;
-    gap: 20px;
-    }
-    .nav-links a {
-    color: #000;
-    text-decoration: none;
-    font-weight: bold;
-    }
-    .nav-links a:hover {
-    text-decoration: underline;
-    }
-    /* Page Header */
     .page-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin: 30px 0;
     }
     .page-header h1 {
     font-size: 28px;
     font-weight: bold;
-    margin-bottom: 10px;
     }
-    /* Form Styles */
     .form-container {
     flex: 1;
     display: flex;
@@ -90,8 +59,7 @@ head
     font-weight: bold;
     font-size: 14px;
     }
-    .form input,
-    .form select {
+    .form input {
     width: 100%;
     padding: 12px;
     border: 1px solid #000;
@@ -130,44 +98,6 @@ head
     .btn-secondary:hover {
     background-color: #f5f5f5;
     }
-    /* Footer Styles */
-    .footer {
-    background-color: #fff;
-    border-top: 1px solid #000;
-    padding: 20px 0;
-    text-align: center;
-    margin-top: auto;
-    }
-    .footer-content {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    }
-    .footer-section {
-    flex: 1;
-    min-width: 200px;
-    margin-bottom: 20px;
-    }
-    .footer-section h4 {
-    margin-bottom: 15px;
-    font-size: 16px;
-    }
-    .footer-section p, .footer-section a {
-    color: #666;
-    font-size: 14px;
-    text-decoration: none;
-    }
-    .footer-section a:hover {
-    text-decoration: underline;
-    }
-    .copyright {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-    color: #666;
-    font-size: 14px;
-    }
-    /* Mobile responsiveness */
     @media (max-width: 768px) {
     body {
     margin: 0 20px;
@@ -175,123 +105,91 @@ head
     .form {
     padding: 20px;
     }
-    .nav-container {
-    flex-direction: column;
-    gap: 15px;
-    }
-    .footer-content {
-    flex-direction: column;
-    }
     .form-actions {
     flex-direction: column;
     }
     }
-    @media (max-width: 480px) {
-    body {
-    margin: 0 15px;
-    }
-    .form {
-    padding: 15px;
-    }
-    .page-header h1 {
-    font-size: 24px;
-    }
-    .image-preview img {
-    max-width: 100%;
-    }
-    }
-// Navigation
+
 include ../components/nav
-// Main Content
+
 .page-header
   h1 Edit Furniture
+  
 .form-container
   .form
-    // Image Preview
-    .image-preview
-      img#furnitureImage(src='https://via.placeholder.com/300x200?text=Furniture+Image' alt='Furniture Image')
-    form#editForm(data-furniture-id='12345')
+    if furniture.image
+      .image-preview
+        img#furnitureImage(src=furniture.image alt=furniture.name)
+        
+    form#editForm(data-furniture-id=furniture._id)
       .form-group
         label(for='name') Name
-        input#name(type='text' name='name' value='Executive Office Desk' required='')
+        input#name(type='text' name='name' value=furniture.name required='')
+        
       .form-group
         label(for='productType') Product Type
-        input#productType(type='text' name='productType' value='Office Desk' required='')
+        input#productType(type='text' name='productType' value=furniture.productType required='')
+        
       .form-group
         label(for='quantity') Quantity
-        input#quantity(type='number' name='quantity' value='15' required='')
+        input#quantity(type='number' name='quantity' value=furniture.quantity required='')
+        
       .form-group
         label(for='costPrice') Cost Price (UGX)
-        input#costPrice(type='number' name='costPrice' value='450000' required='')
+        input#costPrice(type='number' name='costPrice' value=furniture.costPrice required='')
+        
       .form-group
         label(for='productPrice') Product Price (UGX)
-        input#productPrice(type='number' name='productPrice' value='750000' required='')
+        input#productPrice(type='number' name='productPrice' value=furniture.productPrice required='')
+        
       .form-group
         label(for='supplierName') Supplier Name
-        input#supplierName(type='text' name='supplierName' value='Premium Furniture Ltd' required='')
+        input#supplierName(type='text' name='supplierName' value=furniture.supplierName required='')
+        
       .form-group
         label(for='productQuality') Product Quality
-        input#productQuality(type='text' name='productQuality' value='Premium Grade' required='')
+        input#productQuality(type='text' name='productQuality' value=furniture.productQuality required='')
+        
       .form-group
         label(for='color') Color (Optional)
-        input#color(type='text' name='color' value='Dark Walnut')
+        input#color(type='text' name='color' value=furniture.color || '')
+        
       .form-group
         label(for='measurement') Measurement (Optional)
-        input#measurement(type='text' name='measurement' value='180x80x75 cm')
+        input#measurement(type='text' name='measurement' value=furniture.measurement || '')
+        
       .form-actions
         button.btn.btn-primary(type='submit') Update Furniture
         a.btn.btn-secondary(href='/displayfurniture') Cancel
-// Footer
-footer.footer
-  .footer-content
-    .footer-section
-      h4 MAYONDO WOOD &amp; FURNITURE
-      p Quality wood and furniture solutions
-    .footer-section
-      h4 Contact Us
-      p Email: info@mayondo.com
-      p Phone: +255 123 456 789
-    .footer-section
-      h4 Quick Links
-      p
-        a(href='about.html') About Us
-      p
-        a(href='contact.html') Contact
-      p
-        a(href='privacy.html') Privacy Policy
-  .copyright
-    | &copy; 2023 MAYONDO WOOD &amp; FURNITURE. All rights reserved.
+
+include ../components/footer
+
 script.
   document.getElementById('editForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const furnitureId = e.target.dataset.furnitureId;
-  const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData);
-  try {
-  const response = await fetch(`/editfurniture/${furnitureId}`, {
-  method: 'PUT',
-  headers: {
-  'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
+    e.preventDefault();
+    const furnitureId = e.target.dataset.furnitureId;
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    
+    try {
+      const response = await fetch(`/editfurniture/${furnitureId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        alert('Furniture updated successfully!');
+        window.location.href = '/displayfurniture';
+      } else {
+        alert(result.message || 'Error updating furniture');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error updating furniture');
+    }
   });
-  const result = await response.json();
-  if (response.ok) {
-  alert('Furniture updated successfully!');
-  window.location.href = '/displayfurniture';
-  } else {
-  alert(result.message || 'Error updating furniture');
-  }
-  } catch (error) {
-  console.error('Error:', error);
-  alert('Error updating furniture');
-  }
-  });
-  // Function to update image preview (you would replace this with actual image data)
-  function updateImagePreview(imageUrl) {
-  if (imageUrl) {
-  document.getElementById('furnitureImage').src = imageUrl;
-  }
-  }
-  // Example: Update image when page loads with actual data
-  // updateImagePreview('path/to/actual/furniture/image.jpg');

@@ -18,45 +18,14 @@ head
     display: flex;
     flex-direction: column;
     }
-    /* Navigation Styles */
-    .navbar {
-    background-color: #fff;
-    border-bottom: 1px solid #000;
-    padding: 15px 0;
-    margin-bottom: 30px;
-    }
-    .nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    }
-    .logo {
-    font-size: 24px;
-    font-weight: bold;
-    }
-    .nav-links {
-    display: flex;
-    gap: 20px;
-    }
-    .nav-links a {
-    color: #000;
-    text-decoration: none;
-    font-weight: bold;
-    }
-    .nav-links a:hover {
-    text-decoration: underline;
-    }
-    /* Page Header */
     .page-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin: 30px 0;
     }
     .page-header h1 {
     font-size: 28px;
     font-weight: bold;
-    margin-bottom: 10px;
     }
-    /* Form Styles */
     .form-container {
     flex: 1;
     display: flex;
@@ -90,8 +59,7 @@ head
     font-weight: bold;
     font-size: 14px;
     }
-    .form input,
-    .form select {
+    .form input {
     width: 100%;
     padding: 12px;
     border: 1px solid #000;
@@ -130,44 +98,6 @@ head
     .btn-secondary:hover {
     background-color: #f5f5f5;
     }
-    /* Footer Styles */
-    .footer {
-    background-color: #fff;
-    border-top: 1px solid #000;
-    padding: 20px 0;
-    text-align: center;
-    margin-top: auto;
-    }
-    .footer-content {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    }
-    .footer-section {
-    flex: 1;
-    min-width: 200px;
-    margin-bottom: 20px;
-    }
-    .footer-section h4 {
-    margin-bottom: 15px;
-    font-size: 16px;
-    }
-    .footer-section p, .footer-section a {
-    color: #666;
-    font-size: 14px;
-    text-decoration: none;
-    }
-    .footer-section a:hover {
-    text-decoration: underline;
-    }
-    .copyright {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-    color: #666;
-    font-size: 14px;
-    }
-    /* Mobile responsiveness */
     @media (max-width: 768px) {
     body {
     margin: 0 20px;
@@ -175,123 +105,91 @@ head
     .form {
     padding: 20px;
     }
-    .nav-container {
-    flex-direction: column;
-    gap: 15px;
-    }
-    .footer-content {
-    flex-direction: column;
-    }
     .form-actions {
     flex-direction: column;
     }
     }
-    @media (max-width: 480px) {
-    body {
-    margin: 0 15px;
-    }
-    .form {
-    padding: 15px;
-    }
-    .page-header h1 {
-    font-size: 24px;
-    }
-    .image-preview img {
-    max-width: 100%;
-    }
-    }
-// Navigation
+
 include ../components/nav
-// Main Content
+
 .page-header
   h1 Edit Wood
+  
 .form-container
   .form
-    // Image Preview
-    .image-preview
-      img#woodImage(src='https://via.placeholder.com/300x200?text=Wood+Image' alt='Wood Image')
-    form#editForm(data-wood-id='12345')
+    if wood.image
+      .image-preview
+        img#woodImage(src=wood.image alt=wood.woodName)
+        
+    form#editForm(data-wood-id=wood._id)
       .form-group
         label(for='woodType') Wood Type
-        input#woodType(type='text' name='woodType' value='Mahogany' required='')
+        input#woodType(type='text' name='woodType' value=wood.woodType required='')
+        
       .form-group
         label(for='woodName') Wood Name
-        input#woodName(type='text' name='woodName' value='African Mahogany' required='')
+        input#woodName(type='text' name='woodName' value=wood.woodName required='')
+        
       .form-group
         label(for='quantity') Quantity
-        input#quantity(type='number' name='quantity' value='50' required='')
+        input#quantity(type='number' name='quantity' value=wood.quantity required='')
+        
       .form-group
         label(for='costPrice') Cost Price (UGX)
-        input#costPrice(type='number' name='costPrice' value='150000' required='')
+        input#costPrice(type='number' name='costPrice' value=wood.costPrice required='')
+        
       .form-group
         label(for='productPrice') Product Price (UGX)
-        input#productPrice(type='number' name='productPrice' value='250000' required='')
+        input#productPrice(type='number' name='productPrice' value=wood.productPrice required='')
+        
       .form-group
         label(for='supplierName') Supplier Name
-        input#supplierName(type='text' name='supplierName' value='Timber Suppliers Ltd' required='')
+        input#supplierName(type='text' name='supplierName' value=wood.supplierName required='')
+        
       .form-group
         label(for='productQuality') Product Quality
-        input#productQuality(type='text' name='productQuality' value='Grade A' required='')
+        input#productQuality(type='text' name='productQuality' value=wood.productQuality required='')
+        
       .form-group
         label(for='color') Color (Optional)
-        input#color(type='text' name='color' value='Dark Brown')
+        input#color(type='text' name='color' value=wood.color || '')
+        
       .form-group
         label(for='measurement') Measurement (Optional)
-        input#measurement(type='text' name='measurement' value='2x4 inches')
+        input#measurement(type='text' name='measurement' value=wood.measurement || '')
+        
       .form-actions
         button.btn.btn-primary(type='submit') Update Wood
         a.btn.btn-secondary(href='/displaywood') Cancel
-// Footer
-footer.footer
-  .footer-content
-    .footer-section
-      h4 MAYONDO WOOD &amp; FURNITURE
-      p Quality wood and furniture solutions
-    .footer-section
-      h4 Contact Us
-      p Email: info@mayondo.com
-      p Phone: +255 123 456 789
-    .footer-section
-      h4 Quick Links
-      p
-        a(href='about.html') About Us
-      p
-        a(href='contact.html') Contact
-      p
-        a(href='privacy.html') Privacy Policy
-  .copyright
-    | &copy; 2023 MAYONDO WOOD &amp; FURNITURE. All rights reserved.
+
+include ../components/footer
+
 script.
   document.getElementById('editForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const woodId = e.target.dataset.woodId;
-  const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData);
-  try {
-  const response = await fetch(`/editwood/${woodId}`, {
-  method: 'PUT',
-  headers: {
-  'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
+    e.preventDefault();
+    const woodId = e.target.dataset.woodId;
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    
+    try {
+      const response = await fetch(`/editwood/${woodId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        alert('Wood updated successfully!');
+        window.location.href = '/displaywood';
+      } else {
+        alert(result.message || 'Error updating wood');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error updating wood');
+    }
   });
-  const result = await response.json();
-  if (response.ok) {
-  alert('Wood updated successfully!');
-  window.location.href = '/displaywood';
-  } else {
-  alert(result.message || 'Error updating wood');
-  }
-  } catch (error) {
-  console.error('Error:', error);
-  alert('Error updating wood');
-  }
-  });
-  // Function to update image preview (you would replace this with actual image data)
-  function updateImagePreview(imageUrl) {
-  if (imageUrl) {
-  document.getElementById('woodImage').src = imageUrl;
-  }
-  }
-  // Example: Update image when page loads with actual data
-  // updateImagePreview('path/to/actual/wood/image.jpg');

@@ -3,111 +3,114 @@ const router = express.Router();
 const Sale = require("../models/Sale");
 const Furniturestock = require("../models/Furniturestock");
 const Woodstock = require("../models/Woodstock");
-const User = require("../models/User");
 
-// Admin Dashboard
+// Admin Dashboard Route
 router.get("/admindashboard", async (req, res) => {
-    try {
-        // Get all sales
-        const allSales = await Sale.find();
-        
-        // Calculate total revenue
-        let totalRevenue = 0;
-        allSales.forEach(sale => {
-            totalRevenue += sale.total;
-        });
-        
-        // Get sales count
-        const totalSalesCount = allSales.length;
-        
-        // Get all furniture
-        const allFurniture = await Furniturestock.find();
-        
-        // Find furniture with low stock (less than 5)
-        const lowStockFurniture = [];
-        allFurniture.forEach(item => {
-            if (item.quantity < 5) {
-                lowStockFurniture.push(item);
-            }
-        });
-        
-        // Get all wood
-        const allWood = await Woodstock.find();
-        
-        // Find wood with low stock (less than 5)
-        const lowStockWood = [];
-        allWood.forEach(item => {
-            if (item.quantity < 5) {
-                lowStockWood.push(item);
-            }
-        });
-        
-        // Get all sales agents
-        const salesAgents = await User.find({ role: "Sales_agent" });
-        
-        // Calculate performance for each agent
-        const agentPerformance = [];
-        for (let agent of salesAgents) {
-            const agentName = agent.fname + " " + agent.lname;
-            
-            // Count sales for this agent
-            let agentSalesCount = 0;
-            let agentRevenue = 0;
-            
-            allSales.forEach(sale => {
-                if (sale.salesAgent === agentName) {
-                    agentSalesCount = agentSalesCount + 1;
-                    agentRevenue = agentRevenue + sale.total;
-                }
-            });
-            
-            agentPerformance.push({
-                name: agentName,
-                totalSales: agentSalesCount,
-                totalRevenue: agentRevenue
-            });
-        }
-        
-        // Get recent sales (last 10)
-        const allSalesSorted = await Sale.find().sort({ date: -1 });
-        const recentSales = allSalesSorted.slice(0, 10);
-        
-        res.render("admindashboard", {
-            totalRevenue,
-            totalSalesCount,
-            lowStockFurniture,
-            lowStockWood,
-            agentPerformance,
-            recentSales
-        });
-        
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error loading admin dashboard");
+  try {
+    // Fetch all sales
+    const allSales = await Sale.find().sort({ date: -1 });
+    
+    // Fetch furniture and wood stock
+    const furniture = await Furniturestock.find();
+    const wood = await Woodstock.find();
+    
+    // Calculate total revenue
+    const totalRevenue = allSales.reduce((sum, sale) => sum + sale.total, 0);
+    
+    // Calculate revenue for last week (for comparison)
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const lastWeekSales = allSales.filter(sale => new Date(sale.date) >= oneWeekAgo);
+    const lastWeekRevenue = lastWeekSales.reduce((sum, sale) => sum + sale.total, 0);
+    
+    // Calculate two weeks ago revenue for percentage
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    const prevWeekSales = allSales.filter(sale => {
+      const saleDate = new Date(sale.date);
+      return saleDate >= twoWeeksAgo && saleDate < oneWeekAgo;
+    });
+    const prevWeekRevenue = prevWeekSales.reduce((sum, sale) => sum + sale.total, 0);
+    
+    // Calculate percentage change
+    const revenueChange = prevWeekRevenue > 0 
+      ? ((lastWeekRevenue - prevWeekRevenue) / prevWeekRevenue * 100).toFixed(1)
+      : 0;
+    
+    // Sales count and change
+    const lastWeekSalesCount = lastWeekSales.length;
+    const prevWeekSalesCount = prevWeekSales.length;
+    const salesChange = prevWeekSalesCount > 0
+      ? ((lastWeekSalesCount - prevWeekSalesCount) / prevWeekSalesCount * 100).toFixed(1)
+      : 0;
+    
+    // Find low stock items (less than 5 units)
+    const lowStockFurniture = furniture.filter(item => item.quantity < 5);
+    const lowStockWood = wood.filter(item => item.quantity < 5);
+    const lowStockCount = lowStockFurniture.length + lowStockWood.length;
+    
+    // Get sales by agent
+    const salesByAgent = {};
+    allSales.forEach(sale => {
+      if (!salesByAgent[sale.salesAgent]) {
+        salesByAgent[sale.salesAgent] = {
+          name: sale.salesAgent,
+          salesCount: 0,
+          totalRevenue: 0
+        };
+      }
+      salesByAgent[sale.salesAgent].salesCount++;
+      salesByAgent[sale.salesAgent].totalRevenue += sale.total;
+    });
+    
+    const agentPerformance = Object.values(salesByAgent)
+      .sort((a, b) => b.totalRevenue - a.totalRevenue);
+    
+    // Get recent sales (last 10)
+    const recentSales = allSales.slice(0, 10);
+    
+    // Prepare weekly data for charts (last 7 days)
+    const last7Days = [];
+    const salesByDay = {};
+    const revenueByDay = {};
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dayKey = date.toISOString().split('T')[0];
+      last7Days.push(dayKey);
+      salesByDay[dayKey] = 0;
+      revenueByDay[dayKey] = 0;
     }
-});
-
-// View all sales
-router.get("/allsales", async (req, res) => {
-    try {
-        const sales = await Sale.find().sort({ date: -1 });
-        res.render("allsales", { sales });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error loading sales");
-    }
-});
-
-// View stock levels
-router.get("/stocklevels", async (req, res) => {
-    try {
-        const furniture = await Furniturestock.find().sort({ quantity: 1 });
-        const wood = await Woodstock.find().sort({ quantity: 1 });
-        res.render("stocklevels", { furniture, wood });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error loading stock levels");
-    }
+    
+    allSales.forEach(sale => {
+      const saleDate = new Date(sale.date).toISOString().split('T')[0];
+      if (salesByDay.hasOwnProperty(saleDate)) {
+        salesByDay[saleDate]++;
+        revenueByDay[saleDate] += sale.total;
+      }
+    });
+    
+    const dailySalesData = last7Days.map(day => salesByDay[day]);
+    const dailyRevenueData = last7Days.map(day => Math.round(revenueByDay[day]));
+    
+    res.render("admindashboard", {
+      totalRevenue: Math.round(totalRevenue),
+      revenueChange,
+      totalSales: allSales.length,
+      salesChange,
+      lowStockCount,
+      agentPerformance,
+      recentSales,
+      lowStockFurniture,
+      lowStockWood,
+      dailySalesData,
+      dailyRevenueData
+    });
+  } catch (error) {
+    console.error("Error loading admin dashboard:", error);
+    res.status(500).send("Error loading dashboard");
+  }
 });
 
 module.exports = router;

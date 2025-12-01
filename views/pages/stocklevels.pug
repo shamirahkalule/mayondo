@@ -18,45 +18,14 @@ head
     display: flex;
     flex-direction: column;
     }
-    /* Navigation Styles */
-    .navbar {
-    background-color: #fff;
-    border-bottom: 1px solid #000;
-    padding: 15px 0;
-    margin-bottom: 30px;
-    }
-    .nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    }
-    .logo {
-    font-size: 24px;
-    font-weight: bold;
-    }
-    .nav-links {
-    display: flex;
-    gap: 20px;
-    }
-    .nav-links a {
-    color: #000;
-    text-decoration: none;
-    font-weight: bold;
-    }
-    .nav-links a:hover {
-    text-decoration: underline;
-    }
-    /* Page Header */
     .page-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin: 30px 0;
     }
     .page-header h1 {
     font-size: 28px;
     font-weight: bold;
-    margin-bottom: 10px;
     }
-    /* Stock Sections */
     .stock-section {
     margin-bottom: 50px;
     }
@@ -93,7 +62,6 @@ head
     font-size: 24px;
     font-weight: bold;
     }
-    /* Table Styles */
     .table-container {
     overflow-x: auto;
     }
@@ -140,257 +108,114 @@ head
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     }
-    /* Footer Styles */
-    .footer {
-    background-color: #fff;
-    border-top: 1px solid #000;
-    padding: 20px 0;
-    text-align: center;
-    margin-top: auto;
-    }
-    .footer-content {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    }
-    .footer-section {
-    flex: 1;
-    min-width: 200px;
-    margin-bottom: 20px;
-    }
-    .footer-section h4 {
-    margin-bottom: 15px;
-    font-size: 16px;
-    }
-    .footer-section p, .footer-section a {
-    color: #666;
-    font-size: 14px;
-    text-decoration: none;
-    }
-    .footer-section a:hover {
-    text-decoration: underline;
-    }
-    .copyright {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-    color: #666;
-    font-size: 14px;
-    }
-    /* Mobile responsiveness */
     @media (max-width: 768px) {
     body {
     margin: 0 20px;
     }
-    .nav-container {
-    flex-direction: column;
-    gap: 15px;
-    }
     .stock-summary {
     flex-direction: column;
     }
-    .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
     }
-    .footer-content {
-    flex-direction: column;
-    }
-    }
-    @media (max-width: 480px) {
-    body {
-    margin: 0 15px;
-    }
-    .page-header h1 {
-    font-size: 24px;
-    }
-    .section-header h2 {
-    font-size: 20px;
-    }
-    .stock-table {
-    font-size: 12px;
-    }
-    .stock-table th,
-    .stock-table td {
-    padding: 8px 4px;
-    }
-    }
-// Navigation
+
 include ../components/nav
-// Main Content
+
 .page-header
   h1 Stock Levels
-// Furniture Stock Section
+
 .stock-section
   .section-header
     h2 Furniture Stock
-  // Furniture Summary Cards
+    
   .stock-summary
     .summary-card
       h3 Total Items
-      .count 8
+      .count= furnitureStats.total
     .summary-card
       h3 Low Stock Items
-      .count.status-low 2
+      .count.status-low= furnitureStats.lowStock
     .summary-card
       h3 Warning Items
-      .count.status-warning 1
+      .count.status-warning= furnitureStats.warning
     .summary-card
       h3 Good Stock
-      .count.status-good 5
-  // Furniture Table
+      .count.status-good= furnitureStats.good
+      
   .table-container
-    table.stock-table
-      thead
-        tr
-          th Product Name
-          th Type
-          th Quantity
-          th Cost Price
-          th Selling Price
-          th Status
-      tbody
-        // Low Stock Item
-        tr.low-stock
-          td Executive Office Desk
-          td Office Desk
-          td 3
-          td UGX 450,000
-          td UGX 750,000
-          td.status-low &#x26A0;&#xFE0F; LOW STOCK
-        // Low Stock Item
-        tr.low-stock
-          td Dining Table
-          td Dining Table
-          td 4
-          td UGX 380,000
-          td UGX 620,000
-          td.status-low &#x26A0;&#xFE0F; LOW STOCK
-        // Warning Stock Item
-        tr.warning-stock
-          td Bookshelf
-          td Shelf
-          td 8
-          td UGX 120,000
-          td UGX 220,000
-          td.status-warning Warning
-        // Good Stock Items
-        tr
-          td Office Chair
-          td Chair
-          td 15
-          td UGX 85,000
-          td UGX 150,000
-          td.status-good Good
-        tr
-          td Coffee Table
-          td Table
-          td 12
-          td UGX 95,000
-          td UGX 180,000
-          td.status-good Good
-        tr
-          td Wardrobe
-          td Storage
-          td 10
-          td UGX 320,000
-          td UGX 520,000
-          td.status-good Good
-        tr
-          td Bed Frame
-          td Bed
-          td 18
-          td UGX 280,000
-          td UGX 450,000
-          td.status-good Good
-        tr
-          td TV Stand
-          td Stand
-          td 22
-          td UGX 75,000
-          td UGX 140,000
-          td.status-good Good
-// Wood Stock Section
+    if furniture && furniture.length > 0
+      table.stock-table
+        thead
+          tr
+            th Product Name
+            th Type
+            th Quantity
+            th Cost Price
+            th Selling Price
+            th Status
+        tbody
+          each item in furniture
+            tr(class=item.quantity < 5 ? 'low-stock' : (item.quantity < 10 ? 'warning-stock' : ''))
+              td= item.name
+              td= item.productType
+              td= item.quantity
+              td UGX #{item.costPrice.toLocaleString()}
+              td UGX #{item.productPrice.toLocaleString()}
+              td(class=item.quantity < 5 ? 'status-low' : (item.quantity < 10 ? 'status-warning' : 'status-good'))
+                if item.quantity < 5
+                  |  LOW STOCK
+                else if item.quantity < 10
+                  | Warning
+                else
+                  | Good
+    else
+      .empty-state
+        p No furniture stock available
+
 .stock-section
   .section-header
     h2 Wood Stock
-  // Wood Summary Cards
+    
   .stock-summary
     .summary-card
       h3 Total Items
-      .count 6
+      .count= woodStats.total
     .summary-card
       h3 Low Stock Items
-      .count.status-low 1
+      .count.status-low= woodStats.lowStock
     .summary-card
       h3 Warning Items
-      .count.status-warning 1
+      .count.status-warning= woodStats.warning
     .summary-card
       h3 Good Stock
-      .count.status-good 4
-  // Wood Table
+      .count.status-good= woodStats.good
+      
   .table-container
-    table.stock-table
-      thead
-        tr
-          th Wood Name
-          th Type
-          th Quantity
-          th Cost Price
-          th Selling Price
-          th Status
-      tbody
-        // Low Stock Item
-        tr.low-stock
-          td African Mahogany
-          td Mahogany
-          td 2
-          td UGX 150,000
-          td UGX 250,000
-          td.status-low &#x26A0;&#xFE0F; LOW STOCK
-        // Warning Stock Item
-        tr.warning-stock
-          td Teak Wood
-          td Teak
-          td 7
-          td UGX 220,000
-          td UGX 380,000
-          td.status-warning Warning
-        // Good Stock Items
-        tr
-          td Oak Wood
-          td Oak
-          td 25
-          td UGX 180,000
-          td UGX 300,000
-          td.status-good Good
-        tr
-          td Pine Wood
-          td Pine
-          td 35
-          td UGX 80,000
-          td UGX 140,000
-          td.status-good Good
-        tr
-          td Cedar Wood
-          td Cedar
-          td 18
-          td UGX 160,000
-          td UGX 280,000
-          td.status-good Good
-        tr
-          td Maple Wood
-          td Maple
-          td 22
-          td UGX 190,000
-          td UGX 320,000
-          td.status-good Good
-// Footer
-footer.footer
-  .footer-content
-    .footer-section
-      h4 MAYONDO WOOD &amp; FURNITURE
-      p Quality wood and furniture solutions
-    .footer-section
-      h4
+    if wood && wood.length > 0
+      table.stock-table
+        thead
+          tr
+            th Wood Name
+            th Type
+            th Quantity
+            th Cost Price
+            th Selling Price
+            th Status
+        tbody
+          each item in wood
+            tr(class=item.quantity < 5 ? 'low-stock' : (item.quantity < 10 ? 'warning-stock' : ''))
+              td= item.woodName
+              td= item.woodType
+              td= item.quantity
+              td UGX #{item.costPrice.toLocaleString()}
+              td UGX #{item.productPrice.toLocaleString()}
+              td(class=item.quantity < 5 ? 'status-low' : (item.quantity < 10 ? 'status-warning' : 'status-good'))
+                if item.quantity < 5
+                  |  LOW STOCK
+                else if item.quantity < 10
+                  | Warning
+                else
+                  | Good
+    else
+      .empty-state
+        p No wood stock available
+
+include ../components/footer
