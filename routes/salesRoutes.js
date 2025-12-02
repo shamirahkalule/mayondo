@@ -4,9 +4,10 @@ const Customer = require("../models/Customer");
 const Sale = require("../models/Sale");
 const Furniturestock = require("../models/Furniturestock");
 const Woodstock = require("../models/Woodstock");
+const { isAuthenticated, isSalesAgent, isManager } = require("../middleware/auth");
 
 // Dashboard route
-router.get("/dashboard", async (req, res) => {
+router.get("/dashboard", isAuthenticated, isSalesAgent, async (req, res) => {
     try {
         // Get total sales count
         const totalSales = await Sale.countDocuments();
@@ -89,7 +90,8 @@ router.get("/dashboard", async (req, res) => {
             customerGrowth,
             furnitureData,
             woodData,
-            outOfStockItems
+            outOfStockItems,
+            user: req.user
         });
     } catch (error) {
         console.error(error);
@@ -98,10 +100,10 @@ router.get("/dashboard", async (req, res) => {
 });
 
 // All Sales route
-router.get("/allsales", async (req, res) => {
+router.get("/allsales", isAuthenticated, isManager, async (req, res) => {
     try {
         const sales = await Sale.find().sort({date: -1});
-        res.render("allsales", {sales});
+        res.render("allsales", { sales, user: req.user});
     } catch (error) {
         console.error(error);
         res.status(500).send("Error loading sales");
@@ -109,11 +111,11 @@ router.get("/allsales", async (req, res) => {
 });
 
 // Customer routes
-router.get("/addcustomer", (req, res) => {
-    res.render("addcustomer");
+router.get("/addcustomer", isAuthenticated, isSalesAgent, (req, res) => {
+    res.render("addcustomer", { user: req.user || null });
 });
 
-router.post("/addcustomer", async (req, res) => {
+router.post("/addcustomer", isAuthenticated, isSalesAgent, async (req, res) => {
     try {
         const newCustomer = new Customer(req.body);
         await newCustomer.save();
@@ -124,10 +126,10 @@ router.post("/addcustomer", async (req, res) => {
     }
 });
 
-router.get("/customers", async (req, res) => {
+router.get("/customers", isAuthenticated, isSalesAgent, async (req, res) => {
     try {
         const customers = await Customer.find();
-        res.render("customers", {customers});
+        res.render("customers", {customers, user: req.user});
     } catch (error) {
         console.error(error);
         res.status(500).send("Error loading customers");
@@ -135,31 +137,70 @@ router.get("/customers", async (req, res) => {
 });
 
 // Close sale routes
-router.get("/closesale", async (req, res) => {
+router.get("/closesale", isAuthenticated, isSalesAgent, async (req, res) => {
     try {
         const customers = await Customer.find();
         const furniture = await Furniturestock.find();
         const wood = await Woodstock.find(); 
-        res.render("closesale", {customers, furniture, wood});
+        res.render("closesale", {customers, furniture, wood, user: req.user});
     } catch (error) {
         console.error(error);
         res.status(500).send("Error loading sale page");
     }
 });
 
-router.post("/closesale", async (req, res) => {
+router.post("/closesale", isAuthenticated, isSalesAgent, async (req, res) => {
     try {
         // Parse items if it's a JSON string
         if (typeof req.body.items === 'string') {
             req.body.items = JSON.parse(req.body.items);
         }
         
+        // Set the sales agent to the logged-in user
+        req.body.salesAgent = `${req.user.fname} ${req.user.lname}`;
+        
+        // Deduct stock for each item in the sale
+        for (const item of req.body.items) {
+            // Check furniture stock first
+            let furnitureItem = await Furniturestock.findOne({ name: item.productName });
+            
+            if (furnitureItem) {
+                // Check if enough stock is available
+                if (furnitureItem.quantity < item.quantity) {
+                    return res.status(400).send(`Insufficient stock for ${item.productName}. Available: ${furnitureItem.quantity}, Requested: ${item.quantity}`);
+                }
+                
+                // Deduct quantity from furniture stock
+                furnitureItem.quantity -= item.quantity;
+                await furnitureItem.save();
+            } else {
+                // Check wood stock
+                let woodItem = await Woodstock.findOne({ woodName: item.productName });
+                
+                if (woodItem) {
+                    // Check if enough stock is available
+                    if (woodItem.quantity < item.quantity) {
+                        return res.status(400).send(`Insufficient stock for ${item.productName}. Available: ${woodItem.quantity}, Requested: ${item.quantity}`);
+                    }
+                    
+                    // Deduct quantity from wood stock
+                    woodItem.quantity -= item.quantity;
+                    await woodItem.save();
+                } else {
+                    // Product not found in either inventory
+                    return res.status(404).send(`Product "${item.productName}" not found in inventory`);
+                }
+            }
+        }
+        
+        // Save the sale after successful stock deduction
         const newSale = new Sale(req.body);
         await newSale.save();
+        
         res.redirect("/dashboard");
     } catch (error) {
         console.error(error);
-        res.redirect("/closesale");
+        res.status(500).send("Error processing sale: " + error.message);
     }
 });
 

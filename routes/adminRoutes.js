@@ -3,9 +3,10 @@ const router = express.Router();
 const Sale = require("../models/Sale");
 const Furniturestock = require("../models/Furniturestock");
 const Woodstock = require("../models/Woodstock");
+const { isAuthenticated, isManager } = require("../middleware/auth");
 
 // Admin Dashboard Route
-router.get("/admindashboard", async (req, res) => {
+router.get("/admindashboard", isAuthenticated, isManager, async (req, res) => {
   try {
     // Fetch all sales
     const allSales = await Sale.find().sort({ date: -1 });
@@ -105,7 +106,8 @@ router.get("/admindashboard", async (req, res) => {
       lowStockFurniture,
       lowStockWood,
       dailySalesData,
-      dailyRevenueData
+      dailyRevenueData,
+      user: req.user
     });
   } catch (error) {
     console.error("Error loading admin dashboard:", error);

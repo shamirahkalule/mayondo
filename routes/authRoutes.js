@@ -4,7 +4,7 @@ const User = require("../models/User");
 const passport = require("passport")
 
 router.get("/signup", (req, res) => {
-    res.render("signup")
+    res.render("signup", {user: req.user || null})
 });
 
 router.post("/signup", async(req, res) =>{
@@ -32,10 +32,20 @@ router.post("/signup", async(req, res) =>{
 });
 
 router.get("/signin", (req, res) => {
-    res.render("signin")
+    res.render("signin", {user: req.user || null})
 
 });
 
 router.post("/signin", passport.authenticate("local", {successRedirect: "/", failureRedirect: "/signin"}));
+
+router.get("/logout", (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Error logging out");
+        }
+        res.redirect("/signin");
+    });
+});
 
 module.exports = router;

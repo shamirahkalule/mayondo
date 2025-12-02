@@ -5,109 +5,174 @@ html
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     title Mayondo Wood &amp; Furniture
     style.
-      body {
-        margin: 0 100px;
+      * {
+        margin: 0;
         padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
       }
-
-      /* Page container */
-      .page-container {
-        margin: 20px 100px; /* top/bottom 20px, left/right 40px */
+      body {
+        background-color: #fff;
+        color: #000;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
-
-      /* Row 1 custom split */
-      .row1 {
+      .hero-section {
+        text-align: center;
+        padding: 80px 20px;
+        background-color: #f5f5f5;
+        border-bottom: 2px solid #000;
+      }
+      .hero-section h1 {
+        font-size: 48px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+      .hero-section p {
+        font-size: 20px;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto 40px;
+      }
+      .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 16px 32px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+      .btn-primary {
+        background-color: #000;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background-color: #333;
+      }
+      .btn-secondary {
+        background-color: #fff;
+        color: #000;
+        border: 2px solid #000;
+      }
+      .btn-secondary:hover {
+        background-color: #f5f5f5;
+      }
+      .content-section {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 60px 20px;
+      }
+      .features-grid {
         display: grid;
-        grid-template-columns: calc(40% - 7px) calc(30% - 7px) calc(30% - 6px);
-        grid-auto-rows: 200px;
-        gap: 10px;
-        margin-bottom: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        margin-top: 40px;
       }
-
-      /* Main grid for rows 2–4 */
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-auto-rows: 200px;
-        gap: 10px;
+      .feature-card {
+        padding: 30px;
+        border: 2px solid #000;
+        border-radius: 4px;
+        text-align: center;
+        transition: transform 0.3s ease;
       }
-
-      /* Hero image height */
-      .hero {
-        grid-column: span 3;
-        grid-row: span 2;
+      .feature-card:hover {
+        transform: translateY(-5px);
       }
-
-      .grid img,
-      .row1 img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+      .feature-card h3 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
       }
-
-      .span-rows {
-        grid-row: span 2;
-        grid-column: 3;
+      .feature-card p {
+        color: #666;
+        line-height: 1.6;
       }
-
+      .mission-vision {
+        background-color: #f5f5f5;
+        padding: 60px 20px;
+        margin-top: 60px;
+      }
+      .mission-vision-content {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .mission-vision h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+      }
+      .mission-vision p {
+        font-size: 18px;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 30px;
+      }
       @media (max-width: 768px) {
-      .page-container {
-        margin: 20px 5px; /* small side margins */
-        display: flex;
-        flex-direction: column;
-        gap: 10px; /* vertical spacing between images */
-      }
-
-      /* Stack images */
-      .row1,
-      .grid {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      /* Hero first */
-      .hero {
-        order: -1; /* push hero to top */
-        width: calc(100% - 10px);
-        height: auto; /* let height adjust */
-      }
-
-      /* All other images */
-      .row1 img,
-      .grid img:not(.hero) {
-        width: calc(100% - 10px);
-        height: auto;
-      }
-
-      /* Remove grid specific spans for mobile */
-      .span-rows {
-        grid-row: auto;
-        grid-column: auto;
-      }
+        .hero-section h1 {
+          font-size: 32px;
+        }
+        .hero-section p {
+          font-size: 16px;
+        }
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .cta-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+        .btn {
+          width: 100%;
+          max-width: 300px;
+        }
       }
 
   body
     include ../components/nav
 
-    .page-container
-      // ROW 1
-      .row1
-        img(src='img1.jpg')
-        img(src='img2.jpg')
-        img(src='img3.jpg')
+    .hero-section
+      h1 Mayondo Wood &amp; Furniture
+      p Welcome to our comprehensive inventory management system. Manage inventories and fulfill orders the right way!
+      .cta-buttons
+        if user
+          if user.role === 'Manager'
+            a.btn.btn-primary(href='/admindashboard') Go to Admin Dashboard
+          else
+            a.btn.btn-primary(href='/dashboard') Go to Dashboard
+        else
+          a.btn.btn-primary(href='/signin') Sign In
+          a.btn.btn-secondary(href='/signup') Sign Up
 
-      // MAIN GRID
-      .grid
-        img.hero(src='img4.jpg')
+    .content-section
+      .features-grid
+        .feature-card
+          h3 Inventory Management
+          p Track your furniture and wood stock levels in real-time. Get alerts for low stock items and manage your inventory efficiently.
+        
+        .feature-card
+          h3 Sales Tracking
+          p Record and monitor all sales transactions. Generate comprehensive reports on sales performance and customer data.
+        
+        .feature-card
+          h3 Customer Management
+          p Maintain a complete database of your customers with contact information and purchase history.
 
-        // Row 3
-        img(src='img5.jpg')
-        img(src='img6.jpg')
-        img.span-rows(src='img9.jpg')
-
-        // Row 4
-        img(src='img7.jpg')
-        img(src='img8.jpg')
+    .mission-vision
+      .mission-vision-content
+        h2 Our Mission
+        p To provide high quality furniture and wood with pride and originality. We strive to deliver exceptional products that meet the highest standards of craftsmanship.
+        
+        h2 Our Vision
+        p To create better everyday life for people by offering sustainable, beautiful, and functional furniture solutions that transform living spaces.
 
     include ../components/footer

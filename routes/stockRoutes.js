@@ -3,6 +3,7 @@ const router = express.Router();
 const Furniturestock = require("../models/Furniturestock");
 const Woodstock = require("../models/Woodstock");
 const multer = require("multer");
+const { isAuthenticated, isManager } = require("../middleware/auth");
 
 var storage = multer.diskStorage({
   destination:  (req, file, cb) => {
@@ -16,7 +17,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 // Stock Levels Route
-router.get("/stocklevels", async (req, res) => {
+router.get("/stocklevels", isAuthenticated, isManager, async (req, res) => {
   try {
     // Fetch all furniture and wood
     const furniture = await Furniturestock.find().sort({ quantity: 1 });
@@ -57,7 +58,8 @@ router.get("/stocklevels", async (req, res) => {
       woodWarningStock,
       woodGoodStock,
       furnitureStats,
-      woodStats
+      woodStats,
+      user: req.user
     });
   } catch (error) {
     console.error("Error loading stock levels:", error);
@@ -66,10 +68,10 @@ router.get("/stocklevels", async (req, res) => {
 });
 
 // Display Furniture Route
-router.get("/displayfurniture", async (req, res) => {
+router.get("/displayfurniture", isAuthenticated, isManager, async (req, res) => {
   try {
     const furnitureList = await Furniturestock.find().sort({ date: -1 });
-    res.render("displayfurniture", { furnitureList });
+    res.render("displayfurniture", { furnitureList, user: req.user });
   } catch (error) {
     console.error("Error fetching furniture:", error);
     res.status(500).send("Error loading furniture");
@@ -77,10 +79,10 @@ router.get("/displayfurniture", async (req, res) => {
 });
 
 // Display Wood Route
-router.get("/displaywood", async (req, res) => {
+router.get("/displaywood", isAuthenticated, isManager, async (req, res) => {
   try {
     const woodList = await Woodstock.find().sort({ date: -1 });
-    res.render("displaywood", { woodList });
+    res.render("displaywood", { woodList, user: req.user });
   } catch (error) {
     console.error("Error fetching wood:", error);
     res.status(500).send("Error loading wood");
@@ -88,8 +90,8 @@ router.get("/displaywood", async (req, res) => {
 });
 
 // Register Furniture Routes
-router.get("/regfurniture", (req, res) => {
-  res.render("regfurniture");
+router.get("/regfurniture", isAuthenticated, isManager, (req, res) => {
+  res.render("regfurniture", {user: req.user || null});
 });
 
 router.post("/regfurniture", upload.single("image"), async(req, res) => {
@@ -115,8 +117,8 @@ router.post("/regfurniture", upload.single("image"), async(req, res) => {
 });
 
 // Register Wood Routes
-router.get("/regwood", (req, res) => {
-  res.render("regwood");
+router.get("/regwood", isAuthenticated, isManager, (req, res) => {
+  res.render("regwood", {user: req.user || null});
 });
 
 router.post("/regwood", upload.single("image"), async(req, res) =>{
@@ -142,20 +144,20 @@ router.post("/regwood", upload.single("image"), async(req, res) =>{
 
 
 // Edit Furniture Routes
-router.get("/editfurniture/:id", async (req, res) => {
+router.get("/editfurniture/:id", isAuthenticated, isManager, async (req, res) => {
   try {
     const furniture = await Furniturestock.findById(req.params.id);
     if (!furniture) {
       return res.status(404).send("Furniture not found");
     }
-    res.render("editfurniture", { furniture });
+    res.render("editfurniture", { furniture, user: req.user });
   } catch (error) {
     console.error("Error loading furniture:", error);
     res.status(500).send("Error loading furniture");
   }
 });
 
-router.put("/editfurniture/:id", async (req, res) => {
+router.put("/editfurniture/:id", isAuthenticated, isManager, async (req, res) => {
   try {
     await Furniturestock.findByIdAndUpdate(req.params.id, req.body);
     res.json({ success: true, message: "Furniture updated successfully" });
@@ -166,20 +168,20 @@ router.put("/editfurniture/:id", async (req, res) => {
 });
 
 // Edit Wood Routes
-router.get("/editwood/:id", async (req, res) => {
+router.get("/editwood/:id", isAuthenticated, isManager, async (req, res) => {
   try {
     const wood = await Woodstock.findById(req.params.id);
     if (!wood) {
       return res.status(404).send("Wood not found");
     }
-    res.render("editwood", { wood });
+    res.render("editwood", { wood, user: req.user });
   } catch (error) {
     console.error("Error loading wood:", error);
     res.status(500).send("Error loading wood");
   }
 });
 
-router.put("/editwood/:id", async (req, res) => {
+router.put("/editwood/:id", isAuthenticated, isManager, async (req, res) => {
   try {
     await Woodstock.findByIdAndUpdate(req.params.id, req.body);
     res.json({ success: true, message: "Wood updated successfully" });

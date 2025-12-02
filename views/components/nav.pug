@@ -49,6 +49,28 @@ html
         background-color: #34495e;
       }
 
+      .user-info {
+        color: #ecf0f1;
+        font-size: 14px;
+        padding: 10px;
+        background-color: #34495e;
+        border-radius: 4px;
+        margin-left: 10px;
+      }
+
+      .logout-btn {
+        background-color: #e74c3c;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .logout-btn:hover {
+        background-color: #c0392b;
+      }
+
       .hamburger {
         display: none;
         flex-direction: column;
@@ -71,8 +93,8 @@ html
         }
 
         nav {
-          margin: 0;   /* small side margin for mobile */
-          padding: 5px;  /* reduce padding for mobile */
+          margin: 0;
+          padding: 5px;
         }
 
         .nav-links {
@@ -91,13 +113,17 @@ html
         }
 
         .nav-links.active {
-          max-height: 600px;
+          max-height: 800px;
         }
 
         .nav-links a {
           padding: 16px 32px;
           border-radius: 0;
           border-bottom: 1px solid #34495e;
+        }
+
+        .user-info {
+          margin: 10px 32px;
         }
 
         .hamburger.active span:nth-child(1) {
@@ -122,19 +148,36 @@ html
           span
         #navLinks.nav-links
           a(href='/') Home
-          a(href='/admindashboard') Admin Dashboard
-          a(href='/dashboard') Dashboard
-          a(href='/addcustomer') Add Customer
-          a(href='/customers') View Customers
-          a(href='/closesale') Close Sale
-          a(href='/allsales') All Sales
-          a(href='/stocklevels') Stock Levels
-          a(href='/displaywood') Display Wood
-          a(href='/displayfurniture') Display Furniture
-          a(href='/regfurniture') Register Furniture
-          a(href='/regwood') Register Wood
-          a(href='/signin') Sign in
-          a(href='/signup') Sign Up
+          
+          //- Show Admin Dashboard only for Managers
+          if user && user.role === 'Manager'
+            a(href='/admindashboard') Admin Dashboard
+            a(href='/allsales') All Sales
+            a(href='/stocklevels') Stock Levels
+            a(href='/displaywood') Display Wood
+            a(href='/displayfurniture') Display Furniture
+          
+          //- Show Dashboard for both Manager and Sales Agent
+          if user &&  user.role === 'Sales_agent'
+            a(href='/dashboard') Dashboard
+            a(href='/addcustomer') Add Customer
+            a(href='/customers') View Customers
+            a(href='/closesale') Close Sale
+
+
+          
+          //- Show Register/Edit options only for Managers
+          if user && user.role === 'Manager'
+            a(href='/regfurniture') Register Furniture
+            a(href='/regwood') Register Wood
+          
+          //- Authentication links
+          if !user
+            a(href='/signin') Sign in
+            a(href='/signup') Sign Up
+          else
+            span.user-info= `${user.fname} ${user.lname} (${user.role})`
+            a.logout-btn(href='/logout') Logout
 
     script.
       const hamburger = document.getElementById('hamburger');
